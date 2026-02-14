@@ -7,7 +7,7 @@
 
     <groupId>com.dastan</groupId>
     <artifactId>toolbox</artifactId>
-    <version>1.0.0</version>
+    <version>0.0.1</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -16,15 +16,14 @@
     </modules>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
-        <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <jspecify.version>1.0.0</jspecify.version> <!-- Jul 16, 2024 -->
 
         <junit.version>6.0.1</junit.version> <!-- Oct 31, 2025 -->
-        <assertj.version>3.27.6</assertj.version> <!-- Sep 22, 2025 -->
+        <assertj.version>3.27.7</assertj.version> <!-- Jan 24, 2026 -->
 
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version> <!-- Sep 22, 2025 -->
     </properties>
