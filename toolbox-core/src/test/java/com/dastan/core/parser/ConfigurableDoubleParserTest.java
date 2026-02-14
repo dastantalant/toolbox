@@ -1,0 +1,175 @@
+/*
+ * @(#)ConfigurableDoubleParserTest.java
+ * Copyright © 2024 Werner Randelshofer, Switzerland. MIT License.
+ */
+package com.dastan.core.parser;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DynamicNode;
+import org.junit.jupiter.api.TestFactory;
+
+import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.function.ToDoubleFunction;
+import java.util.stream.Stream;
+
+import static com.dastan.core.parser.ConfigurableDoubleParserTestDataFactory.createDataForBadConfiguredStrings;
+import static com.dastan.core.parser.ConfigurableDoubleParserTestDataFactory.createDataForLegalConfiguredStrings;
+import static com.dastan.core.parser.ConfigurableDoubleParserTestDataFactory.createLocalizedTestData;
+import static com.dastan.core.parser.ConfigurableDoubleParserTestDataFactory.createNumberFormatSymbolsTestData;
+import static com.dastan.core.parser.FloatValueTestDataFactory.createDataForDoubleDecimalClingerInputClasses;
+import static com.dastan.core.parser.FloatValueTestDataFactory.createDataForDoubleDecimalLimits;
+import static com.dastan.core.parser.FloatValueTestDataFactory.createDataForSignificandDigitsInputClasses;
+import static com.dastan.core.parser.JavaDoubleTestDataFactory.createDataForBadStrings;
+import static com.dastan.core.parser.JavaDoubleTestDataFactory.createDataForLegalCroppedStrings;
+import static com.dastan.core.parser.JavaDoubleTestDataFactory.createDataForLegalDecStrings;
+import static com.dastan.core.parser.JavaDoubleTestDataFactory.createFloatTestDataForInputClassesInMethodParseFloatValue;
+import static com.dastan.core.parser.JavaDoubleTestDataFactory.createLongRunningDoubleTestData;
+import static com.dastan.core.parser.JavaFloatTestDataFactory.createTestDataForInfinity;
+import static com.dastan.core.parser.JavaFloatTestDataFactory.createTestDataForNaN;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+
+/**
+ * Tests class {@link ConfigurableDoubleParser}
+ */
+public final class ConfigurableDoubleParserTest {
+
+    @TestFactory
+    public Stream<DynamicNode> dynamicTests_parseDouble_CharSequence() {
+        return createRegularDoubleTestData().stream()
+                .filter(t -> t.charLength() == t.input().length()
+                        && t.charOffset() == 0)
+                .map(t -> dynamicTest(t.title(),
+                        () -> test(t, u -> new ConfigurableDoubleParser(u.symbols() == null ? NumberFormatSymbols.fromDefault() : u.symbols(), u.ignoreCase()).parseDouble(u.input()))));
+    }
+
+    @TestFactory
+    public Stream<DynamicNode> dynamicTests_parseDouble_CharSequence_int_int() {
+        return createRegularDoubleTestData().stream()
+                .map(t -> dynamicTest(t.title(),
+                        () -> test(t, u -> new ConfigurableDoubleParser(u.symbols() == null ? NumberFormatSymbols.fromDefault() : u.symbols(), u.ignoreCase()).parseDouble(u.input(), u.charOffset(), u.charLength()))));
+    }
+
+    @TestFactory
+    @Disabled("long running test")
+    public Stream<DynamicNode> dynamicTests_parseDouble_CharSequence_int_int_longRunningTests() {
+        ToDoubleFunction<NumberTestData> lambda = u -> new ConfigurableDoubleParser(u.symbols() == null ? NumberFormatSymbols.fromDefault() : u.symbols(), u.ignoreCase()).parseDouble(u.input(), u.charOffset(), u.charLength());
+        return createLongRunningDoubleTestData()
+                .map(t -> dynamicTest(t.title(),
+                        () -> test(t, lambda)));
+    }
+
+    public static List<NumberTestData> createRegularDoubleTestData() {
+        List<NumberTestData> list = new ArrayList<>();
+        list.addAll(createTestDataForInfinity());
+        list.addAll(createTestDataForNaN());
+        list.addAll(createDataForDoubleDecimalLimits());
+        list.addAll(createDataForBadStrings());
+        list.addAll(createDataForLegalDecStrings());
+        list.addAll(createDataForLegalConfiguredStrings());
+        list.addAll(createDataForBadConfiguredStrings());
+        list.addAll(createDataForDoubleDecimalClingerInputClasses());
+        list.addAll(createDataForLegalCroppedStrings());
+        list.addAll(createFloatTestDataForInputClassesInMethodParseFloatValue());
+        list.addAll(createDataForSignificandDigitsInputClasses());
+        list.addAll(createNumberFormatSymbolsTestData());
+        return list;
+    }
+
+    @TestFactory
+    public List<DynamicNode> dynamicTests_parseDouble_Localized() {
+        List<DynamicNode> list = new ArrayList<>();
+        for (Locale locale : new Locale[]{
+                new Locale("ar"),
+                new Locale("de,CH"),
+                new Locale("fi"),
+                new Locale("fr", "FR"),
+        }) {
+
+            DecimalFormatSymbols decimalFormatSymbols = ((DecimalFormat) NumberFormat.getNumberInstance(locale)).getDecimalFormatSymbols();
+            List<NumberTestData> dataList = new ArrayList<>();
+            dataList.addAll(createLocalizedTestData(locale));
+            dataList.addAll(createLocalizedTestData(locale, createFloatTestDataForInputClassesInMethodParseFloatValue()));
+            dataList.addAll(createLocalizedTestData(locale, createDataForSignificandDigitsInputClasses()));
+            dataList.stream()
+                    .filter(t -> t.charLength() == t.input().length()
+                            && t.charOffset() == 0)
+                    .map(t -> dynamicTest(t.title(),
+                            () -> performTestDecimalFormatSymbols(t, decimalFormatSymbols)))
+                    .forEach(list::add);
+        }
+
+        return list;
+    }
+
+
+    public void performTestDecimalFormatSymbols(NumberTestData u, DecimalFormatSymbols decimalFormatSymbols) {
+        u = u.withSymbols(NumberFormatSymbols.fromDecimalFormatSymbols(decimalFormatSymbols));
+        test(u, d -> new ConfigurableDoubleParser(d.symbols(), d.ignoreCase()).parseDouble(d.input()));
+        test(u, d -> new ConfigurableDoubleParser(d.symbols(), d.ignoreCase()).parseDouble(d.input().toString().toCharArray()));
+        test(u, d -> new ConfigurableDoubleParser(d.symbols(), d.ignoreCase()).parseDouble(d.input().toString().getBytes(StandardCharsets.UTF_8)));
+    }
+
+    @TestFactory
+    public List<DynamicNode> dynamicTests_parseDouble_NumberFormatSymbols() {
+        List<DynamicNode> list = new ArrayList<>();
+        List<NumberTestData> dataList = new ArrayList<>();
+        dataList.addAll(createNumberFormatSymbolsTestData());
+            dataList.stream()
+                    .filter(t -> t.charLength() == t.input().length()
+                            && t.charOffset() == 0)
+                    .map(t -> dynamicTest(t.title(),
+                            () -> performTestNumberFormatSymbols(t)))
+                    .forEach(list::add);
+
+
+        return list;
+    }
+
+
+    public void performTestNumberFormatSymbols(NumberTestData u) {
+        test(u, d -> new ConfigurableDoubleParser(u.symbols(), u.ignoreCase()).parseDouble(d.input()));
+        test(u, d -> new ConfigurableDoubleParser(u.symbols(), u.ignoreCase()).parseDouble(d.input().toString().toCharArray()));
+        test(u, d -> new ConfigurableDoubleParser(u.symbols(), u.ignoreCase()).parseDouble(d.input().toString().getBytes(StandardCharsets.UTF_8)));
+    }
+
+
+    private void test(NumberTestData d, ToDoubleFunction<NumberTestData> f) {
+        if (d.input() instanceof String) {
+            if (d.expectedErrorMessage() != null) {
+                try {
+                    double actual = f.applyAsDouble(d);
+                    fail("should throw an exception but returned " + actual);
+                } catch (Exception e) {
+                    if (!Objects.equals(d.expectedErrorMessage(), e.getMessage())) {
+                        e.printStackTrace();
+                        assertEquals(d.expectedErrorMessage(), e.getMessage(), "Did throw an exception with an unexpected error emssage");
+                    }
+                    assertEquals(d.expectedThrowableClass(), e.getClass());
+                }
+            } else if (d.expectedValue() == null) {
+                try {
+                    double actual = f.applyAsDouble(d);
+                    fail("should throw an exception but returned " + actual);
+                } catch (Exception e) {
+                    //success
+                }
+            } else {
+                try {
+                    double actual = f.applyAsDouble(d);
+                    assertEquals(d.expectedValue().doubleValue(), actual);
+                } catch (NumberFormatException e) {
+                    fail("Error parsing \"" + d.input() + "\" with symbols " + d.symbols(), e);
+                }
+            }
+        }
+    }
+}
