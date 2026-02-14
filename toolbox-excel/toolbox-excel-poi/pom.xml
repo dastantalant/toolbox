@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.dastan</groupId>
         <artifactId>toolbox-excel</artifactId>
-        <version>1.0.0</version>
+        <version>0.0.1</version>
     </parent>
 
     <artifactId>toolbox-excel-poi</artifactId>
