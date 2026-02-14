@@ -1,0 +1,134 @@
+/*
+ * @(#)JavaFloatParserTest.java
+ * Copyright © 2024 Werner Randelshofer, Switzerland. MIT License.
+ */
+package com.toolbox.core.parser;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DynamicNode;
+import org.junit.jupiter.api.TestFactory;
+
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import static com.toolbox.core.parser.JavaFloatTestDataFactory.createLongRunningFloatTestData;
+import static com.toolbox.core.parser.JavaFloatTestDataFactory.createRegularFloatTestData;
+import static com.toolbox.core.parser.VirtualCharSequence.toByteArray;
+import static com.toolbox.core.parser.VirtualCharSequence.toCharArray;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+
+/**
+ * Tests class {@link JavaFloatParser}
+ */
+public final class JavaFloatParserTest {
+    public static final int EXPECTED_MAX_INPUT_LENGTH = Integer.MAX_VALUE - 4;
+
+    @TestFactory
+    public Stream<DynamicNode> dynamicTests_parseFloat_CharSequence() {
+        return createRegularFloatTestData().stream()
+                .filter(t -> t.charLength() == t.input().length()
+                        && t.charLength() <= AbstractFloatValueParser.MAX_INPUT_LENGTH
+                        && t.charOffset() == 0)
+                .map(t -> dynamicTest(t.title(),
+                        () -> test(t, u -> JavaFloatParser.parseFloat(u.input()))));
+    }
+
+    @TestFactory
+    public Stream<DynamicNode> dynamicTests_parseFloat_CharSequence_Int_Int() {
+        return createRegularFloatTestData().stream()
+                .map(t -> dynamicTest(t.title(),
+                        () -> test(t, u -> JavaFloatParser.parseFloat(u.input(), u.charOffset(), u.charLength()))));
+    }
+
+    @TestFactory
+    @Disabled("long running test")
+    public Stream<DynamicNode> dynamicTests_parseFloat_CharSequence_int_int_longRunningTests() {
+        ToFloatFunction<NumberTestData> lambda = u -> JavaFloatParser.parseFloat((u.input()), u.charOffset(), u.charLength());
+        return createLongRunningFloatTestData()
+                        .map(t -> dynamicTest(t.title(),
+                                () -> test(t, lambda)));
+    }
+
+    @TestFactory
+    public Stream<DynamicNode> dynamicTests_parseFloat_byteArray() {
+        return createRegularFloatTestData().stream()
+                .filter(t -> t.charLength() == t.input().length()
+                        && t.byteLength() <= EXPECTED_MAX_INPUT_LENGTH
+                        && t.charOffset() == 0)
+                .map(t -> dynamicTest(t.title(),
+                        () -> test(t,
+                                u -> JavaFloatParser.parseFloat(toByteArray(u.input())
+                                ))));
+    }
+
+    @TestFactory
+    public Stream<DynamicNode> dynamicTests_parseFloat_byteArray_int_int() {
+        return createRegularFloatTestData().stream()
+                .map(t -> dynamicTest(t.title(),
+                        () -> test(t, u -> JavaFloatParser.parseFloat(toByteArray(u.input()),
+                                u.byteOffset(), u.byteLength()))));
+    }
+
+    @TestFactory
+    @Disabled("long running test")
+    public Stream<DynamicNode> dynamicTests_parseFloat_byteArray_int_int_longRunningTests() {
+        ToFloatFunction<NumberTestData> lambda = u -> JavaFloatParser.parseFloat(toByteArray(u.input()), u.charOffset(), u.charLength());
+        return createLongRunningFloatTestData()
+                        .map(t -> dynamicTest(t.title(),
+                                () -> test(t, lambda)));
+    }
+
+    @TestFactory
+    public Stream<DynamicNode> dynamicTests_parseFloat_charArray() {
+        return createRegularFloatTestData().stream()
+                .filter(t -> t.charLength() == t.input().length()
+                        && t.charLength() <= EXPECTED_MAX_INPUT_LENGTH
+                        && t.charOffset() == 0)
+                .map(t -> dynamicTest(t.title(),
+                        () -> test(t, u -> JavaFloatParser.parseFloat(toCharArray(u.input())))));
+    }
+
+    @TestFactory
+    public Stream<DynamicNode> dynamicTests_parseFloat_charArray_int_int() {
+        return createRegularFloatTestData().stream()
+                .map(t -> dynamicTest(t.title(),
+                        () -> test(t, u -> JavaFloatParser.parseFloat(toCharArray(u.input()),
+                                u.charOffset(), u.charLength()))));
+    }
+
+    @TestFactory
+    @Disabled("long running test")
+    public Stream<DynamicNode> dynamicTests_parseFloat_charArray_int_int_longRunningTests() {
+        ToFloatFunction<NumberTestData> lambda = u -> JavaFloatParser.parseFloat(toCharArray(u.input()), u.charOffset(), u.charLength());
+        return createLongRunningFloatTestData()
+                        .map(t -> dynamicTest(t.title(),
+                                () -> test(t, lambda)));
+    }
+
+    protected void test(NumberTestData d, ToFloatFunction<NumberTestData> f) {
+        if (d.expectedErrorMessage() != null) {
+            try {
+                float actual = f.applyAsFloat(d);
+                fail("should throw an exception but returned " + actual);
+            } catch (IllegalArgumentException e) {
+                if (!Objects.equals(d.expectedErrorMessage(), e.getMessage())) {
+                    e.printStackTrace();
+                    assertEquals(d.expectedErrorMessage(), e.getMessage());
+                }
+                assertEquals(d.expectedThrowableClass(), e.getClass());
+            }
+        } else {
+            float actual = f.applyAsFloat(d);
+            assertEquals(d.expectedValue().floatValue(), actual, () -> d.input().toString());
+        }
+    }
+
+
+    @FunctionalInterface
+    public interface ToFloatFunction<T> {
+
+        float applyAsFloat(T value);
+    }
+}
