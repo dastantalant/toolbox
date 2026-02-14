@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.dastan</groupId>
+        <artifactId>toolbox-excel</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>toolbox-excel-poi</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.dastan</groupId>
+            <artifactId>toolbox-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dastan</groupId>
+            <artifactId>toolbox-excel-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.dastan</groupId>
+                            <artifactId>toolbox-excel-processor</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
