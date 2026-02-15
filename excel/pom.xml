@@ -12,11 +12,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>api</module>
-        <module>fast</module>
-        <module>poi</module>
-        <module>processor</module>
-        <module>test</module>
+        <module>excel-api</module>
+        <module>excel-fast</module>
+        <module>excel-poi</module>
+        <module>excel-processor</module>
+        <module>excel-test</module>
     </modules>
 
     <groupId>com.toolbox.excel</groupId>
@@ -31,25 +31,28 @@
         <dependencies>
             <dependency>
                 <groupId>com.toolbox.excel</groupId>
-                <artifactId>api</artifactId>
+                <artifactId>excel-api</artifactId>
                 <version>${project.version}</version>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>com.toolbox.excel</groupId>
-                <artifactId>fast</artifactId>
+                <artifactId>excel-fast</artifactId>
                 <version>${project.version}</version>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>com.toolbox.excel</groupId>
-                <artifactId>poi</artifactId>
+                <artifactId>excel-poi</artifactId>
                 <version>${project.version}</version>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>com.toolbox.excel</groupId>
-                <artifactId>processor</artifactId>
+                <artifactId>excel-processor</artifactId>
                 <version>${project.version}</version>
+                <scope>compile</scope>
             </dependency>
-
 
             <dependency>
                 <groupId>com.fasterxml</groupId>
