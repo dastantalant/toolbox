@@ -27,7 +27,7 @@ public class GapAnalysisStrategyV2 extends AbstractStrategy {
 
     public GapAnalysisStrategyV2(Config config) {
         super(config);
-        Spot.getAvailableList(config.rouletteType()).forEach(s -> gaps.put(s, 0));
+        Spot.availableList(config.rouletteType()).forEach(s -> gaps.put(s, 0));
 
         // Восстановление состояния из истории (если есть)
         Deque<Spot> history = getMarket().getHistory();

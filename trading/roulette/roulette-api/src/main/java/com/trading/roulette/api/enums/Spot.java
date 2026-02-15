@@ -76,7 +76,7 @@ public enum Spot {
     private static final Set<Spot> FIRST_DOZEN_OR_ZERO_SPOTS;
 
     private static final Map<Integer, Spot> SPOT_BY_NUMBER =
-            Arrays.stream(values()).collect(Collectors.toUnmodifiableMap(Spot::getNumber, s -> s));
+            Arrays.stream(values()).collect(Collectors.toUnmodifiableMap(Spot::number, s -> s));
     private static final Map<RouletteType, List<Spot>> AVAILABLE_SPOTS_CACHE;
     public static final Map<RouletteType, Spot[]> WHEEL_LAYOUTS;
     public static final Map<RouletteType, Map<Spot, Integer>> WHEEL_POSITIONS_CACHE;
@@ -106,7 +106,7 @@ public enum Spot {
                 SPOT_21, SPOT_33, SPOT_16, SPOT_04, SPOT_23, SPOT_35, SPOT_14, SPOT_02
         });
         for (RouletteType type : RouletteType.values()) {
-            availableSpots.put(type, getAvailableSpotsUncached(type));
+            availableSpots.put(type, availableSpotsUncached(type));
             Spot[] layout = wheelLayouts.get(type);
             if (layout != null) {
                 Map<Spot, Integer> positions = new EnumMap<>(Spot.class);
@@ -170,7 +170,7 @@ public enum Spot {
         ));
     }
 
-    public static Spot getByNumber(int number) {
+    public static Spot byNumber(int number) {
         Spot spot = SPOT_BY_NUMBER.get(number);
         if (spot == null) {
             throw new IllegalArgumentException("The number does not exist: " + number);
@@ -178,7 +178,7 @@ public enum Spot {
         return spot;
     }
 
-    private static List<Spot> getAvailableSpotsUncached(RouletteType rouletteType) {
+    private static List<Spot> availableSpotsUncached(RouletteType rouletteType) {
         Stream<Spot> stream = Arrays.stream(values());
         if (rouletteType == RouletteType.ONE_TO_36) {
             stream = stream.filter(s -> s != SPOT_0 && s != SPOT_00);
@@ -188,7 +188,7 @@ public enum Spot {
         return stream.toList();
     }
 
-    public static List<Spot> getAvailableList(RouletteType rouletteType) {
+    public static List<Spot> availableList(RouletteType rouletteType) {
         return AVAILABLE_SPOTS_CACHE.getOrDefault(rouletteType, List.of());
     }
 
@@ -244,14 +244,14 @@ public enum Spot {
         return number >= 19 && number <= 36;
     }
 
-    public int getWheelPosition(RouletteType rouletteType) {
+    public int wheelPosition(RouletteType rouletteType) {
         return WHEEL_POSITIONS_CACHE.getOrDefault(rouletteType, Collections.emptyMap()).getOrDefault(this, -1);
     }
 
-    public int getPhysicalDistance(Spot spot, RouletteType rouletteType) {
+    public int physicalDistance(Spot spot, RouletteType rouletteType) {
         Objects.requireNonNull(spot, "spot cannot be null");
-        int thisPos = getWheelPosition(rouletteType);
-        int otherPos = spot.getWheelPosition(rouletteType);
+        int thisPos = wheelPosition(rouletteType);
+        int otherPos = spot.wheelPosition(rouletteType);
 
         if (thisPos == -1 || otherPos == -1) {
             throw new IllegalArgumentException("One or both fields are not available in the specified roulette type");
@@ -267,15 +267,15 @@ public enum Spot {
         return FIRST_DOZEN_OR_ZERO_SPOTS.contains(this);
     }
 
-    public static Map<RouletteType, Spot[]> getWheelLayouts() {
+    public static Map<RouletteType, Spot[]> wheelLayouts() {
         return WHEEL_LAYOUTS;
     }
 
-    public int getNumber() {
+    public int number() {
         return number;
     }
 
-    public Color getColor() {
+    public Color color() {
         return color;
     }
 

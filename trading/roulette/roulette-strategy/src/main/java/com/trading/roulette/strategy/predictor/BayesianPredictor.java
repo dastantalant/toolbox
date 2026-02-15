@@ -32,7 +32,7 @@ public class BayesianPredictor implements Predictor {
         Map<Spot, Long> frequencies = window.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-        List<Spot> availableSpots = Spot.getAvailableList(config.rouletteType());
+        List<Spot> availableSpots = Spot.availableList(config.rouletteType());
         double denominator = totalSpins + (availableSpots.size() * PRIOR_WEIGHT);
 
         return availableSpots.stream()

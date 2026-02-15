@@ -1,6 +1,7 @@
 package com.trading.roulette.api.model.config;
 
 import com.trading.roulette.api.enums.RouletteType;
+import com.trading.roulette.api.enums.SignalType;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -18,7 +19,9 @@ public record Config(
         StopConditionConfig stopConfig,
         Deque<Integer> initial,
         RiskConfig riskConfig,
-        BetLimitConfig betLimitConfig
+        BetLimitConfig betLimitConfig,
+        MoneyConfig moneyConfig,
+        SignalType signalType
 ) {
     public Deque<Integer> initial() {
         return initial == null ? new ArrayDeque<>() : initial;
@@ -27,7 +30,9 @@ public record Config(
     public RiskConfig riskConfig() {
         return riskConfig == null ? RiskConfig.defaultConfig() : riskConfig;
     }
-
+    public SignalType signalType() {
+        return signalType == null ? SignalType.NONE : signalType;
+    }
     public static Builder builder() {
         return new Builder();
     }
@@ -46,10 +51,13 @@ public record Config(
         private Deque<Integer> initial;
         private RiskConfig riskConfig;
         private BetLimitConfig betLimitConfig;
+        private MoneyConfig moneyConfig;
+        private SignalType signalType;
 
         public Config build() {
             realBalance = realBalance == null ? startBalance : realBalance;
-            return new Config(name, rouletteType, debug, tableRules, minBet, maxBet, startBalance, realBalance, tableLimit, stopConfig, initial, riskConfig, betLimitConfig);
+            return new Config(name, rouletteType, debug, tableRules, minBet, maxBet, startBalance, realBalance, tableLimit,
+                    stopConfig, initial, riskConfig, betLimitConfig, moneyConfig, signalType);
         }
 
         public Builder name(String name) {
@@ -116,5 +124,16 @@ public record Config(
             this.betLimitConfig = betLimitConfig;
             return this;
         }
+
+        public Builder moneyConfig(MoneyConfig moneyConfig) {
+            this.moneyConfig = moneyConfig;
+            return this;
+        }
+
+        public Builder signalType(SignalType signalType) {
+            this.signalType = signalType;
+            return this;
+        }
+
     }
 }

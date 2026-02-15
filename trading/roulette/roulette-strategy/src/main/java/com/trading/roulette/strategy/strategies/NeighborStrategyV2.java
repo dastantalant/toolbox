@@ -29,7 +29,7 @@ public class NeighborStrategyV2 extends AbstractStrategy {
 
     public NeighborStrategyV2(Config config) {
         super(config);
-        this.wheelLayout = Spot.getWheelLayouts().get(config.rouletteType());
+        this.wheelLayout = Spot.wheelLayouts().get(config.rouletteType());
         this.wheelSize = (wheelLayout != null) ? wheelLayout.length : 0;
     }
 
@@ -45,7 +45,7 @@ public class NeighborStrategyV2 extends AbstractStrategy {
         List<Spot> recent = HistoryUtil.window(history, wheelSize);
 
         for (Spot s : recent) {
-            int pos = s.getWheelPosition(getConfig().rouletteType());
+            int pos = s.wheelPosition(getConfig().rouletteType());
             if (pos != -1) sectorHits[pos]++;
         }
 

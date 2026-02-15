@@ -35,7 +35,7 @@ public abstract class AbstractRegimeStrategy extends AbstractStrategy {
         double count = 0;
 
         for (Spot spot : list) {
-            sum += spot.getNumber();
+            sum += spot.number();
             if (spot.isRed()) count++;
         }
 
@@ -44,7 +44,7 @@ public abstract class AbstractRegimeStrategy extends AbstractStrategy {
 
         double diff = 0;
         for (Spot spot : list) {
-            diff += Math.pow(spot.getNumber() - mean, 2);
+            diff += Math.pow(spot.number() - mean, 2);
         }
         return DoubleTriple.of(rate, Math.sqrt(diff / n), mean);
     }

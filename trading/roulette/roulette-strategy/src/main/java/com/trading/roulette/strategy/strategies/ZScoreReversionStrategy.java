@@ -56,7 +56,7 @@ public class ZScoreReversionStrategy extends AbstractStrategy {
         long betValue = getMinBet();
 
         // 3. Расчет Z-Score для каждого числа
-        for (Spot spot : Spot.getAvailableList(getConfig().rouletteType())) {
+        for (Spot spot : Spot.availableList(getConfig().rouletteType())) {
             long count = counts.getOrDefault(spot, 0L);
             double zScore = (count - expectedMean) / stdDev;
 

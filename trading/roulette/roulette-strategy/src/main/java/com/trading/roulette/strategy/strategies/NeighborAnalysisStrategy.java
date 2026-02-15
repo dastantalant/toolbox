@@ -54,7 +54,7 @@ public class NeighborAnalysisStrategy extends AbstractStrategy {
         for (int i = 0; i < window && it.hasNext(); i++) {
             Spot cur = it.next();
             try {
-                if (cur.getPhysicalDistance(prev, getConfig().rouletteType()) <= neighborDistanceThreshold) {
+                if (cur.physicalDistance(prev, getConfig().rouletteType()) <= neighborDistanceThreshold) {
                     neighborHits++;
                 }
             } catch (IllegalArgumentException e) {
@@ -69,12 +69,12 @@ public class NeighborAnalysisStrategy extends AbstractStrategy {
     private List<Bet> nextInternal(Spot last) {
         List<Bet> bets = new ArrayList<>();
         RouletteType rType = getConfig().rouletteType();
-        Spot[] spots = Spot.getWheelLayouts().get(rType);
+        Spot[] spots = Spot.wheelLayouts().get(rType);
         if (spots == null) {
             return List.of();
         }
 
-        int position = last.getWheelPosition(rType);
+        int position = last.wheelPosition(rType);
         if (position == -1) {
             return List.of();
         }
@@ -82,11 +82,11 @@ public class NeighborAnalysisStrategy extends AbstractStrategy {
         bets.add(Bet.of(BetHelper.straightUp(last), getMinBet()));
         for (int i = 1; i <= neighborDistanceThreshold; i++) {
             Spot left = spots[(position - i + spots.length) % spots.length];
-            if (left.getWheelPosition(rType) != -1) {
+            if (left.wheelPosition(rType) != -1) {
                 bets.add(Bet.of(BetHelper.straightUp(left), getMinBet()));
             }
             Spot right = spots[(position + i) % spots.length];
-            if (right.getWheelPosition(rType) != -1 && !left.equals(right)) {
+            if (right.wheelPosition(rType) != -1 && !left.equals(right)) {
                 bets.add(Bet.of(BetHelper.straightUp(right), getMinBet()));
             }
         }

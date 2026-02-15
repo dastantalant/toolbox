@@ -43,7 +43,7 @@ public class MarkovPredictor implements Predictor {
         if (totalTransitions == 0) return List.of();
 
         final double finalTotal = totalTransitions;
-        return Spot.getAvailableList(config.rouletteType()).stream()
+        return Spot.availableList(config.rouletteType()).stream()
                 .map(spot -> {
                     int count = transitions.getOrDefault(spot, 0);
                     return SpotPrediction.of(spot, count / finalTotal);

@@ -73,7 +73,7 @@ public abstract class AbstractHybridPredictorStrategy extends AbstractStrategy {
         Map<Spot, Double> countPred = predictorCount.predictSpot(getState(), getConfig()).stream()
                 .collect(Collectors.toMap(SpotPrediction::spot, SpotPrediction::probability));
 
-        List<Spot> list = Spot.getAvailableList(getConfig().rouletteType());
+        List<Spot> list = Spot.availableList(getConfig().rouletteType());
         Map<Spot, Double> collected = list.stream()
                 .collect(Collectors.toMap(spot -> spot,
                         spot -> (markovPred.getOrDefault(spot, 0.0) * markov)

@@ -1,8 +1,10 @@
 package com.trading.roulette.api;
 
 import com.trading.roulette.api.enums.RouletteType;
+import com.trading.roulette.api.enums.SignalType;
 import com.trading.roulette.api.model.config.BetLimitConfig;
 import com.trading.roulette.api.model.config.Config;
+import com.trading.roulette.api.model.config.MoneyConfig;
 import com.trading.roulette.api.model.config.RawConfig;
 import com.trading.roulette.api.model.config.RiskConfig;
 import com.trading.roulette.api.model.config.StopConditionConfig;
@@ -96,6 +98,16 @@ public final class ConfigBuilder {
 
     public ConfigBuilder tableLimit(Long tableLimit) {
         this.tableLimit = tableLimit;
+        return this;
+    }
+
+    public ConfigBuilder moneyConfig(MoneyConfig moneyConfig) {
+        config.moneyConfig(moneyConfig);
+        return this;
+    }
+
+    public ConfigBuilder signalType(SignalType signalType) {
+        config.signalType(signalType);
         return this;
     }
 

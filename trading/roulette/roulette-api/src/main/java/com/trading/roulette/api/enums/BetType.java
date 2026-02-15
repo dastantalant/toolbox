@@ -11,6 +11,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+import static com.trading.roulette.api.enums.RouletteType.AMERICAN;
+import static com.trading.roulette.api.enums.RouletteType.EUROPEAN;
+
 public enum BetType {
     SPOT_01(35, Spot.SPOT_01),
     SPOT_02(35, Spot.SPOT_02),
@@ -48,8 +51,8 @@ public enum BetType {
     SPOT_34(35, Spot.SPOT_34),
     SPOT_35(35, Spot.SPOT_35),
     SPOT_36(35, Spot.SPOT_36),
-    ZERO(35, EnumSet.of(RouletteType.EUROPEAN, RouletteType.AMERICAN), Spot.SPOT_0),
-    DOUBLE_ZERO(35, EnumSet.of(RouletteType.AMERICAN), Spot.SPOT_00),
+    ZERO(35, EnumSet.of(EUROPEAN, AMERICAN), Spot.SPOT_0),
+    DOUBLE_ZERO(35, EnumSet.of(AMERICAN), Spot.SPOT_00),
 
     SPLIT_1_2(17, Spot.SPOT_01, Spot.SPOT_02),
     SPLIT_2_3(17, Spot.SPOT_02, Spot.SPOT_03),
@@ -70,13 +73,13 @@ public enum BetType {
     SIX_LINE_1_2_3_4_5_6(5, Spot.SPOT_01, Spot.SPOT_02, Spot.SPOT_03, Spot.SPOT_04, Spot.SPOT_05, Spot.SPOT_06),
     SIX_LINE_31_32_33_34_35_36(5, Spot.SPOT_31, Spot.SPOT_32, Spot.SPOT_33, Spot.SPOT_34, Spot.SPOT_35, Spot.SPOT_36),
 
-    TOP_LINE_OR_BASKET(6, EnumSet.of(RouletteType.AMERICAN), Spot.SPOT_0, Spot.SPOT_00, Spot.SPOT_01, Spot.SPOT_02, Spot.SPOT_03),
-    TRIO_0_1_2(11, EnumSet.of(RouletteType.EUROPEAN), Spot.SPOT_0, Spot.SPOT_01, Spot.SPOT_02),
-    TRIO_0_2_3(11, EnumSet.of(RouletteType.EUROPEAN), Spot.SPOT_0, Spot.SPOT_02, Spot.SPOT_03),
-    SPLIT_0_00(17, EnumSet.of(RouletteType.AMERICAN), Spot.SPOT_0, Spot.SPOT_00),
-    SPLIT_0_2(17, EnumSet.of(RouletteType.EUROPEAN), Spot.SPOT_0, Spot.SPOT_02),
-    STREET_0_00_2(11, EnumSet.of(RouletteType.AMERICAN), Spot.SPOT_0, Spot.SPOT_00, Spot.SPOT_02),
-    CORNER_0_1_2_3(8, EnumSet.of(RouletteType.EUROPEAN), Spot.SPOT_0, Spot.SPOT_01, Spot.SPOT_02, Spot.SPOT_03),
+    TOP_LINE_OR_BASKET(6, EnumSet.of(AMERICAN), Spot.SPOT_0, Spot.SPOT_00, Spot.SPOT_01, Spot.SPOT_02, Spot.SPOT_03),
+    TRIO_0_1_2(11, EnumSet.of(EUROPEAN), Spot.SPOT_0, Spot.SPOT_01, Spot.SPOT_02),
+    TRIO_0_2_3(11, EnumSet.of(EUROPEAN), Spot.SPOT_0, Spot.SPOT_02, Spot.SPOT_03),
+    SPLIT_0_00(17, EnumSet.of(AMERICAN), Spot.SPOT_0, Spot.SPOT_00),
+    SPLIT_0_2(17, EnumSet.of(EUROPEAN), Spot.SPOT_0, Spot.SPOT_02),
+    STREET_0_00_2(11, EnumSet.of(AMERICAN), Spot.SPOT_0, Spot.SPOT_00, Spot.SPOT_02),
+    CORNER_0_1_2_3(8, EnumSet.of(EUROPEAN), Spot.SPOT_0, Spot.SPOT_01, Spot.SPOT_02, Spot.SPOT_03),
 
     FIRST_COLUMN(2, Spot.FIRST_COLUMN_SPOTS),
     SECOND_COLUMN(2, Spot.SECOND_COLUMN_SPOTS),
@@ -92,17 +95,17 @@ public enum BetType {
     NINETEEN_TO_THIRTY_SIX(1, Spot.HIGH_SPOTS);
 
     private final int payout;
-    private final EnumSet<RouletteType> availableIn;
+    private final Set<RouletteType> availableIn;
     private final Set<Spot> winning;
 
     private static final Map<Spot, BetType> SPOT_MAP = new EnumMap<>(Spot.class);
-    private static final Map<RouletteType, List<BetType>> AVAILABLE_BETS_CACHE = new ConcurrentHashMap<>();
+    private static final Map<RouletteType, List<BetType>> AVAILABLE_BETS = new ConcurrentHashMap<>();
 
     static {
         SPOT_MAP.put(Spot.SPOT_0, ZERO);
         SPOT_MAP.put(Spot.SPOT_00, DOUBLE_ZERO);
         for (Spot spot : Spot.values()) {
-            if (spot.getNumber() > 0) {
+            if (spot.number() > 0) {
                 try {
                     SPOT_MAP.put(spot, BetType.valueOf(spot.name()));
                 } catch (IllegalArgumentException e) {
@@ -112,13 +115,11 @@ public enum BetType {
     }
 
     BetType(int payout, Spot... spots) {
-        this(payout, EnumSet.allOf(RouletteType.class), spots);
+        this(payout, EnumSet.allOf(RouletteType.class), EnumSet.copyOf(List.of(spots)));
     }
 
     BetType(int payout, EnumSet<RouletteType> availableIn, Spot... spots) {
-        this.payout = payout;
-        this.availableIn = availableIn;
-        winning = spots.length == 0 ? EnumSet.noneOf(Spot.class) : EnumSet.copyOf(List.of(spots));
+        this(payout, availableIn, EnumSet.copyOf(List.of(spots)));
     }
 
     BetType(int payout, Set<Spot> spots) {
@@ -128,26 +129,21 @@ public enum BetType {
     BetType(int payout, EnumSet<RouletteType> availableIn, Set<Spot> spots) {
         this.payout = payout;
         this.availableIn = availableIn;
-        winning = (spots == null || spots.isEmpty())
-                ? EnumSet.noneOf(Spot.class)
-                : EnumSet.copyOf(spots);
+        winning = (spots == null || spots.isEmpty()) ? EnumSet.noneOf(Spot.class) : spots;
     }
 
-    public static List<BetType> getAllCovering(Spot spot) {
+    public static List<BetType> allCovering(Spot spot) {
         return Stream.of(BetType.values())
-                .filter(type -> type.getWinning().contains(spot))
+                .filter(type -> type.winning().contains(spot))
                 .toList();
     }
 
-    public static List<BetType> getAvailableList(RouletteType rouletteType) {
+    public static List<BetType> availableList(RouletteType rouletteType) {
         Objects.requireNonNull(rouletteType, "rouletteType не может быть null");
-        return AVAILABLE_BETS_CACHE.computeIfAbsent(rouletteType, key -> {
+        return AVAILABLE_BETS.computeIfAbsent(rouletteType, key -> {
             List<BetType> result = new ArrayList<>();
-            for (BetType bet : values()) {
-                if (bet.isAvailableIn(key)) {
-                    result.add(bet);
-                }
-            }
+            for (BetType bet : values())
+                if (bet.isAvailableIn(key)) result.add(bet);
             return Collections.unmodifiableList(result);
         });
     }
@@ -156,11 +152,11 @@ public enum BetType {
         return availableIn.contains(rouletteType);
     }
 
-    public int getReturnMultiplier() {
+    public int returnMultiplier() {
         return payout + 1;
     }
 
-    public static BetType getStraightUpBetFor(Spot spot) {
+    public static BetType straightUpBetFor(Spot spot) {
         BetType bet = SPOT_MAP.get(spot);
         if (bet == null) {
             throw new IllegalArgumentException("Нет ставки 'Straight Up' для номера: " + spot);
@@ -168,15 +164,15 @@ public enum BetType {
         return bet;
     }
 
-    public int getPayout() {
+    public int payout() {
         return payout;
     }
 
-    public EnumSet<RouletteType> getAvailableIn() {
+    public Set<RouletteType> availableIn() {
         return availableIn;
     }
 
-    public Set<Spot> getWinning() {
+    public Set<Spot> winning() {
         return winning;
     }
 

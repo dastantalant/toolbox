@@ -14,7 +14,7 @@ public record SpotPrediction(Spot spot, double probability) {
     }
 
     public String show() {
-        return String.format("%2s=%.2f", spot.getNumber(), probability);
+        return String.format("%2s=%.2f", spot.number(), probability);
     }
 
     public String toString() {

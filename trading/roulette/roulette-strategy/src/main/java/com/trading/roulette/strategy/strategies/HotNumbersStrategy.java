@@ -29,7 +29,7 @@ public class HotNumbersStrategy extends AbstractStrategy {
         }
 
         Map<Spot, Integer> frequencies = getMarket().getFrequencies();
-        List<Spot> spots = Spot.getAvailableList(getConfig().rouletteType()).stream()
+        List<Spot> spots = Spot.availableList(getConfig().rouletteType()).stream()
                 .sorted(Comparator.comparingInt(spot -> frequencies.getOrDefault(spot, 0)).reversed())
                 .limit(numberOfHotSpotsToBetOn)
                 .toList();

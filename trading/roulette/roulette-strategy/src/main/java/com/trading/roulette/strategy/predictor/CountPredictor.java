@@ -37,7 +37,7 @@ public class CountPredictor implements Predictor {
             counts.merge(spot, 1, Integer::sum);
         }
 
-        return Spot.getAvailableList(config.rouletteType())
+        return Spot.availableList(config.rouletteType())
                 .stream()
                 .map(spot -> SpotPrediction.of(spot, counts.getOrDefault(spot, 0) / total))
                 .toList();
@@ -50,7 +50,7 @@ public class CountPredictor implements Predictor {
         if (total == 0) return List.of();
 
         Map<BetType, Integer> counts = new EnumMap<>(BetType.class);
-        List<BetType> availableTypes = BetType.getAvailableList(config.rouletteType());
+        List<BetType> availableTypes = BetType.availableList(config.rouletteType());
 
         for (Spot spot : window) {
             for (BetType type : availableTypes) {

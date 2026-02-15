@@ -46,7 +46,7 @@ public class EnsemblePredictionStrategy extends AbstractStrategy {
                 .sorted(Comparator.comparingDouble(SpotPrediction::probability).reversed())
                 .limit(betsPerRound)
                 .toList();
-        double averageProb = 1.0 / Spot.getAvailableList(getConfig().rouletteType()).size();
+        double averageProb = 1.0 / Spot.availableList(getConfig().rouletteType()).size();
         List<Bet> bets = new ArrayList<>();
         long currentBalance = getVirtualBalance();
         for (SpotPrediction spotPrediction : topPredictions) {

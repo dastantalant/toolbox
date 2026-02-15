@@ -70,7 +70,7 @@ public class WheelSectorStrategy extends AbstractStrategy {
 
     private Set<Spot> getSpotsInSector(Spot centerSpot, int radius, RouletteType rouletteType) {
         Map<Spot, Integer> wheelPositions = Spot.WHEEL_POSITIONS_CACHE.get(rouletteType);
-        Spot[] wheelLayout = Spot.getWheelLayouts().get(rouletteType);
+        Spot[] wheelLayout = Spot.wheelLayouts().get(rouletteType);
 
         if (wheelPositions == null || wheelLayout == null) {
             return Set.of();

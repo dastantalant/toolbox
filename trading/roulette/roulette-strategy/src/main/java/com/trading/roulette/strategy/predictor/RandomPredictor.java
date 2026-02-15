@@ -22,7 +22,7 @@ public class RandomPredictor implements Predictor {
 
     @Override
     public List<SpotPrediction> predictSpot(State state, Config config) {
-        List<Spot> list = Spot.getAvailableList(config.rouletteType());
+        List<Spot> list = Spot.availableList(config.rouletteType());
         if (list.isEmpty()) {
             return List.of();
         }
@@ -34,7 +34,7 @@ public class RandomPredictor implements Predictor {
 
     @Override
     public List<BetTypePrediction> predictType(State state, Config config) {
-        List<BetType> list = BetType.getAvailableList(config.rouletteType());
+        List<BetType> list = BetType.availableList(config.rouletteType());
         if (list.isEmpty()) {
             return List.of();
         }

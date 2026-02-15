@@ -39,7 +39,7 @@ public class EfficientCountPredictor implements Predictor {
         Map<Spot, Long> frequencies = window.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-        return Spot.getAvailableList(config.rouletteType()).stream()
+        return Spot.availableList(config.rouletteType()).stream()
                 .map(spot -> SpotPrediction.of(spot, frequencies.getOrDefault(spot, 0L) / size))
                 .sorted(Comparator.comparingDouble(SpotPrediction::probability).reversed())
                 .toList();
@@ -57,13 +57,13 @@ public class EfficientCountPredictor implements Predictor {
         Map<Spot, Long> windowFrequencies = window.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-        List<BetType> types = BetType.getAvailableList(config.rouletteType());
+        List<BetType> types = BetType.availableList(config.rouletteType());
         EnumMap<BetType, Long> betMap = new EnumMap<>(BetType.class);
 
         // 2. Создаем карту маппинга Spot -> List<BetType>
         EnumMap<Spot, List<BetType>> spotToTypesMap = new EnumMap<>(Spot.class);
         for (BetType type : types) {
-            for (Spot spot : type.getWinning()) {
+            for (Spot spot : type.winning()) {
                 spotToTypesMap.computeIfAbsent(spot, _ -> new ArrayList<>()).add(type);
             }
         }

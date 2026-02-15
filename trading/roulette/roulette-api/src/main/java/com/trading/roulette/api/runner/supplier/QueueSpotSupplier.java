@@ -25,7 +25,7 @@ public class QueueSpotSupplier extends BaseSpotSupplier {
         if (data.isEmpty()) {
             return null;
         }
-        return Spot.getByNumber(data.poll());
+        return Spot.byNumber(data.poll());
     }
 
     @Override

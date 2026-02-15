@@ -4,7 +4,7 @@ import com.trading.roulette.api.model.Snapshot;
 
 public interface Publisher {
 
-    Subscriber addSubscriber(Subscriber subscriber);
+    void addSubscriber(Subscriber subscriber);
 
     Snapshot publish(Snapshot snapshot);
 

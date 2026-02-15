@@ -147,7 +147,7 @@ public class PatternPredictor implements Predictor {
         // Шаг 3: Корректировка на последовательности чисел
         EnumMap<Spot, Double> patternWeights = calculatePatternWeights(history, config);
 
-        List<Spot> availableSpots = Spot.getAvailableList(config.rouletteType());
+        List<Spot> availableSpots = Spot.availableList(config.rouletteType());
         if (availableSpots.isEmpty()) {
             return List.of();
         }
@@ -233,7 +233,7 @@ public class PatternPredictor implements Predictor {
             }
         }
 
-        for (Spot spot : Spot.getAvailableList(config.rouletteType())) {
+        for (Spot spot : Spot.availableList(config.rouletteType())) {
             double weight = 1.0;
 
             // Логика Hot Spot
@@ -264,7 +264,7 @@ public class PatternPredictor implements Predictor {
      */
     private EnumMap<Spot, Double> calculatePatternWeights(List<Spot> history, Config config) {
         EnumMap<Spot, Double> weights = new EnumMap<>(Spot.class);
-        List<Spot> availableSpots = Spot.getAvailableList(config.rouletteType());
+        List<Spot> availableSpots = Spot.availableList(config.rouletteType());
 
         if (history.size() < minHistoryRequired - 1) {
             availableSpots.forEach(spot -> weights.put(spot, 1.0));
@@ -304,8 +304,8 @@ public class PatternPredictor implements Predictor {
      * @return true, если числа идут подряд (например, 22 и 23).
      */
     private boolean isConsecutiveNumber(Spot spot1, Spot spot2) {
-        int num1 = spot1.getNumber();
-        int num2 = spot2.getNumber();
+        int num1 = spot1.number();
+        int num2 = spot2.number();
         return num1 > 0 && num2 > 0 && Math.abs(num1 - num2) == 1;
     }
 

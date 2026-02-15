@@ -23,7 +23,7 @@ public class RandomStrategy2 extends AbstractStrategy {
     @Override
     public List<Bet> decide() {
         List<Bet> betList = new ArrayList<>();
-        List<BetType> betTypeList = BetType.getAvailableList(getConfig().rouletteType());
+        List<BetType> betTypeList = BetType.availableList(getConfig().rouletteType());
         if (isLastBetWon()) {
             for (Bet bet : getLastBets()) {
                 if (BetHelper.isWin(bet, getMarket().getLastSpot())) {

@@ -29,7 +29,7 @@ public class DistantProgressionBalanceStrategy extends AbstractBalanceStrategy {
             }
             for (var spot : getState().getMarket().getHistory()) {
                 for (BetType type : targetBetTypes) {
-                    if (type.getWinning().contains(spot)) {
+                    if (type.winning().contains(spot)) {
                         counters.put(type, counters.get(type) + 1);
                     }
                 }

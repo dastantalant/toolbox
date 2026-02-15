@@ -25,7 +25,7 @@ public class StraightUpStrategy3 extends AbstractStrategy {
     public List<Bet> decide() {
         count = isLastBetWon() ? 0 : count + 1;
         Set<Spot> excluded = new HashSet<>(HistoryUtil.window(getMarket().getHistory(), count));
-        return Spot.getAvailableList(getConfig().rouletteType())
+        return Spot.availableList(getConfig().rouletteType())
                 .stream()
                 .filter(spot -> !excluded.contains(spot))
                 .map(spot -> BetHelper.betting(spot, getMinBet()))
