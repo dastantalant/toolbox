@@ -20,12 +20,12 @@ public class DifferencePredictor implements Predictor {
             return List.of();
         }
         double average = history.stream()
-                .mapToInt(Spot::getNumber)
+                .mapToInt(Spot::number)
                 .average()
                 .orElse(0.0);
-        int lastSpot = Objects.requireNonNull(state.getMarket().getLastSpot()).getNumber();
-        Spot spot1 = Spot.getByNumber((int) (lastSpot + average));
-        Spot spot2 = Spot.getByNumber((int) (lastSpot - average));
+        int lastSpot = Objects.requireNonNull(state.getMarket().getLastSpot()).number();
+        Spot spot1 = Spot.byNumber((int) (lastSpot + average));
+        Spot spot2 = Spot.byNumber((int) (lastSpot - average));
         return SpotPrediction.of(spot1, 0.5, spot2, 0.5);
     }
 }

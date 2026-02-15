@@ -33,7 +33,7 @@ public class NeighborAnalysisStrategyV2 extends AbstractStrategy {
 
     public NeighborAnalysisStrategyV2(Config config) {
         super(config);
-        this.wheelLayout = Spot.getWheelLayouts().get(config.rouletteType());
+        this.wheelLayout = Spot.wheelLayouts().get(config.rouletteType());
     }
 
     @Override
@@ -103,8 +103,8 @@ public class NeighborAnalysisStrategyV2 extends AbstractStrategy {
     }
 
     private boolean isNeighbor(Spot center, Spot target) {
-        int pos1 = center.getWheelPosition(getConfig().rouletteType());
-        int pos2 = target.getWheelPosition(getConfig().rouletteType());
+        int pos1 = center.wheelPosition(getConfig().rouletteType());
+        int pos2 = target.wheelPosition(getConfig().rouletteType());
         if (pos1 == -1 || pos2 == -1) return false;
 
         int len = wheelLayout.length;
@@ -117,7 +117,7 @@ public class NeighborAnalysisStrategyV2 extends AbstractStrategy {
     private List<Bet> createNeighborBets(Spot center) {
         List<Bet> bets = new ArrayList<>();
         long val = getMinBet();
-        int pos = center.getWheelPosition(getConfig().rouletteType());
+        int pos = center.wheelPosition(getConfig().rouletteType());
         int len = wheelLayout.length;
 
         // Ставим на центр и соседей

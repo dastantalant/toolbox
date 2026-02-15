@@ -80,7 +80,7 @@ public class RegimeTrendFollowerStrategy extends AbstractStrategy {
 
     private double calculateWinRate(List<Spot> spots, BetType type) {
         long wins = spots.stream()
-                .filter(s -> type.getWinning().contains(s))
+                .filter(s -> type.winning().contains(s))
                 .count();
         return (double) wins / spots.size();
     }

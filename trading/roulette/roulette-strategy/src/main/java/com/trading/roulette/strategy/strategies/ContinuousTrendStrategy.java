@@ -41,7 +41,7 @@ public class ContinuousTrendStrategy extends AbstractStrategy {
         return predictions.stream()
                 .limit(spotsToBet)
 //                .filter(p -> p.probability() > betThreshold)
-                .map(p -> Bet.of(BetType.getStraightUpBetFor(p.spot()), getMinBet()))
+                .map(p -> Bet.of(BetType.straightUpBetFor(p.spot()), getMinBet()))
                 .toList();
     }
 }

@@ -69,11 +69,11 @@ public class NeighborStrategy extends AbstractStrategy {
         List<Bet> bets = new ArrayList<>();
         long val = getMinBet();
         RouletteType type = getConfig().rouletteType(); // Тут придет AMERICAN
-        Spot[] layout = Spot.getWheelLayouts().get(type); // В Spot.java уже прописан порядок для AMERICAN
+        Spot[] layout = Spot.wheelLayouts().get(type); // В Spot.java уже прописан порядок для AMERICAN
 
         if (layout == null) return List.of();
 
-        int centerPos = center.getWheelPosition(type);
+        int centerPos = center.wheelPosition(type);
         if (centerPos == -1) return List.of();
 
         int len = layout.length;

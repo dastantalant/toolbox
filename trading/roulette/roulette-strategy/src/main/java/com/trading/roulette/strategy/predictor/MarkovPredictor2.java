@@ -39,7 +39,7 @@ public class MarkovPredictor2 implements Predictor {
         updateMarkovModel(state, config);
         EnumMap<Spot, Long> enumMap = spotMap.getOrDefault(state.getMarket().getLastSpot(), new EnumMap<>(Spot.class));
 
-        return Spot.getAvailableList(config.rouletteType())
+        return Spot.availableList(config.rouletteType())
                 .stream()
                 .map(spot -> SpotPrediction.of(spot, calculate(enumMap.getOrDefault(spot, 0L))))
                 .filter(prediction -> prediction.probability() > 0)
@@ -53,7 +53,7 @@ public class MarkovPredictor2 implements Predictor {
         }
 
         updateMarkovModel(state, config);
-        List<BetType> list = BetType.getAvailableList(config.rouletteType());
+        List<BetType> list = BetType.availableList(config.rouletteType());
         List<BetType> filtered = list.stream()
                 .filter(type -> BetHelper.isWin(type, state.getMarket().getLastSpot()))
                 .toList();
@@ -88,11 +88,11 @@ public class MarkovPredictor2 implements Predictor {
             spotMap.computeIfAbsent(prev, k -> new EnumMap<>(Spot.class))
                     .merge(curr, 1L, Long::sum);
             Spot finalPrev = prev;
-            List<BetType> wins1 = BetType.getAvailableList(config.rouletteType())
+            List<BetType> wins1 = BetType.availableList(config.rouletteType())
                     .stream()
                     .filter(type -> BetHelper.isWin(type, finalPrev))
                     .toList();
-            List<BetType> wins2 = BetType.getAvailableList(config.rouletteType())
+            List<BetType> wins2 = BetType.availableList(config.rouletteType())
                     .stream()
                     .filter(type -> BetHelper.isWin(type, curr))
                     .toList();

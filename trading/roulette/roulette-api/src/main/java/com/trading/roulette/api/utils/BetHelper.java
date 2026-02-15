@@ -23,13 +23,13 @@ public final class BetHelper {
 
     private static long calculatePayout(Bet bet, Spot spot, TableRules rules) {
         boolean isWin = isWin(bet, spot);
-        if (isWin) return bet.value() * bet.type().getReturnMultiplier();
+        if (isWin) return bet.value() * bet.type().returnMultiplier();
         if (rules.laPartage() && spot.isZero() && isEvenMoneyBet(bet.type())) return bet.value() / 2;
         return 0;
     }
 
     private static boolean isEvenMoneyBet(BetType type) {
-        return type.getPayout() == 1;
+        return type.payout() == 1;
     }
 
     public static long totalBetValue(List<Bet> list) {
@@ -41,7 +41,7 @@ public final class BetHelper {
     public static long totalPayout(List<Bet> list, Spot spot) {
         return (list == null || list.isEmpty()) ? 0 : list.stream()
                 .filter(bet -> isWin(bet, spot))
-                .mapToLong(bet -> bet.value() * bet.type().getReturnMultiplier())
+                .mapToLong(bet -> bet.value() * bet.type().returnMultiplier())
                 .sum();
     }
 
@@ -54,11 +54,11 @@ public final class BetHelper {
     }
 
     public static boolean isWin(BetType type, Spot spot) {
-        return type.getWinning().contains(spot);
+        return type.winning().contains(spot);
     }
 
     public static BetType straightUp(Spot spot) {
-        return BetType.getStraightUpBetFor(spot);
+        return BetType.straightUpBetFor(spot);
     }
 
     public static Bet betting(SpotPrediction spotPrediction, long amount) {
@@ -70,6 +70,6 @@ public final class BetHelper {
     }
 
     public static List<BetType> getAllCovering(Spot spot) {
-        return BetType.getAllCovering(spot);
+        return BetType.allCovering(spot);
     }
 }

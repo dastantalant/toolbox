@@ -32,7 +32,7 @@ public class SectorMomentumPredictor implements Predictor {
         if (history.size() < 2) return List.of();
 
         RouletteType type = config.rouletteType();
-        Spot[] layout = Spot.getWheelLayouts().get(type);
+        Spot[] layout = Spot.wheelLayouts().get(type);
         if (layout == null) return List.of();
 
         int wheelSize = layout.length;
@@ -51,8 +51,8 @@ public class SectorMomentumPredictor implements Predictor {
         while (it.hasNext()) {
             Spot next = it.next();
 
-            int pos1 = current.getWheelPosition(type);
-            int pos2 = next.getWheelPosition(type);
+            int pos1 = current.wheelPosition(type);
+            int pos2 = next.wheelPosition(type);
 
             if (pos1 == -1 || pos2 == -1) {
                 current = next;
@@ -77,7 +77,7 @@ public class SectorMomentumPredictor implements Predictor {
                 .orElse(0);
 
         Spot lastSpot = state.getMarket().getLastSpot();
-        int lastPos = lastSpot.getWheelPosition(type);
+        int lastPos = lastSpot.wheelPosition(type);
 
         int targetPos = (lastPos + bestDistance) % wheelSize;
 

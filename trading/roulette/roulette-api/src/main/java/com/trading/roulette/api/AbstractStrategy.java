@@ -1,18 +1,24 @@
 package com.trading.roulette.api;
 
-import com.trading.roulette.api.model.Metric;
-import com.trading.roulette.api.model.config.Config;
+import com.toolbox.core.util.StringUtil;
+import com.trading.roulette.api.enums.BetType;
 import com.trading.roulette.api.enums.Spot;
+import com.trading.roulette.api.logic.MoneyManager;
+import com.trading.roulette.api.logic.MoneyManagerFactory;
+import com.trading.roulette.api.logic.SignalFactory;
+import com.trading.roulette.api.logic.SignalGenerator;
 import com.trading.roulette.api.model.Bet;
 import com.trading.roulette.api.model.Market;
+import com.trading.roulette.api.model.Metric;
 import com.trading.roulette.api.model.Snapshot;
 import com.trading.roulette.api.model.State;
+import com.trading.roulette.api.model.config.Config;
 import com.trading.roulette.api.risk.RiskManager;
 import com.trading.roulette.api.stop.StopCondition;
 import com.trading.roulette.api.stop.StopConditionFactory;
 import com.trading.roulette.api.utils.BetHelper;
-import com.toolbox.core.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +32,8 @@ public abstract class AbstractStrategy implements IStrategy {
     private final RiskManager riskManager;
     private final Metric metric;
     private final State state;
+    protected final SignalGenerator signalGenerator;
+    protected final MoneyManager moneyManager;
 
     protected AbstractStrategy(Config config) {
         this(config, "");
@@ -36,6 +44,8 @@ public abstract class AbstractStrategy implements IStrategy {
         stopConditions = StopConditionFactory.from(config.stopConfig(), config.startBalance());
         riskManager = RiskManager.from(config);
         metric = Metric.from(this.name, config.startBalance());
+        moneyManager = MoneyManagerFactory.create(config);
+        signalGenerator = SignalFactory.create(config);
         state = warmingUp(config);
         state.setLive(true);
     }
@@ -44,7 +54,7 @@ public abstract class AbstractStrategy implements IStrategy {
         Market market = new Market();
         for (Integer number : config.initial()) {
             try {
-                Spot spot = Spot.getByNumber(number);
+                Spot spot = Spot.byNumber(number);
                 market.addSpot(spot);
             } catch (Exception _) {
             }
@@ -62,6 +72,25 @@ public abstract class AbstractStrategy implements IStrategy {
         return riskManager.apply(rawBets, this);
     }
 
+    @Override
+    public List<Bet> decide() {
+        List<BetType> signals = decideSignals();
+        if (signals.isEmpty()) return Collections.emptyList();
+        List<Bet> bets = new ArrayList<>(signals.size());
+        for (BetType type : signals) {
+            long amount = moneyManager.calculateAmount(type, state);
+            if (amount > 0) bets.add(Bet.of(type, amount));
+        }
+        return bets;
+    }
+
+    protected List<BetType> decideSignals() {
+        if (signalGenerator != null) {
+            return signalGenerator.generate(state);
+        }
+        return List.of();
+    }
+
     public final long getVirtualBalance() {
         return state.getVirtualBalance();
     }
@@ -73,6 +102,7 @@ public abstract class AbstractStrategy implements IStrategy {
 
     public final Snapshot commitResult(Spot spot, List<Bet> bets) {
         Snapshot snapshot = update(spot, bets);
+        if (moneyManager != null) moneyManager.update(spot, bets, state);
         onRoundCustom(spot, bets);
         setLastBets(bets);
         return publish(snapshot);
@@ -236,9 +266,8 @@ public abstract class AbstractStrategy implements IStrategy {
     private final Set<Subscriber> subscribers = new CopyOnWriteArraySet<>();
 
     @Override
-    public final Subscriber addSubscriber(Subscriber subscriber) {
+    public final void addSubscriber(Subscriber subscriber) {
         subscribers.add(subscriber);
-        return subscriber;
     }
 
     @Override

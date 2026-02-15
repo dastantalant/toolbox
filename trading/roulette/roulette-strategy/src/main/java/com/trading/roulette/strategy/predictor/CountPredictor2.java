@@ -20,7 +20,7 @@ public class CountPredictor2 implements Predictor {
     public List<SpotPrediction> predictSpot(State state, Config config) {
         Map<Spot, Long> countMap = getSpotTypeCountMap(state);
         double totalCount = state.getMarket().getHistory().size();
-        return Spot.getAvailableList(config.rouletteType())
+        return Spot.availableList(config.rouletteType())
                 .stream()
                 .map(spot -> SpotPrediction.of(spot, calculate(countMap.getOrDefault(spot, 0L), totalCount)))
                 .toList();
@@ -30,7 +30,7 @@ public class CountPredictor2 implements Predictor {
     public List<BetTypePrediction> predictType(State state, Config config) {
         EnumMap<BetType, Long> countMap = getBetTypeCountMap(state, config);
         double totalCount = state.getMarket().getHistory().size();
-        return BetType.getAvailableList(config.rouletteType())
+        return BetType.availableList(config.rouletteType())
                 .stream()
                 .map(type -> BetTypePrediction.of(type, calculate(countMap.getOrDefault(type, 0L), totalCount)))
                 .toList();
@@ -39,7 +39,7 @@ public class CountPredictor2 implements Predictor {
     @Override
     public ColorPrediction predictColor(State state, Config config) {
         EnumMap<Spot, Long> countMap = getSpotTypeCountMap(state);
-        List<Spot> availableSpots = Spot.getAvailableList(config.rouletteType());
+        List<Spot> availableSpots = Spot.availableList(config.rouletteType());
         if (availableSpots.isEmpty()) {
             return ColorPrediction.of();
         }
@@ -72,7 +72,7 @@ public class CountPredictor2 implements Predictor {
 
     private EnumMap<BetType, Long> getBetTypeCountMap(State state, Config config) {
         EnumMap<BetType, Long> countMap = new EnumMap<>(BetType.class);
-        List<BetType> availableTypes = BetType.getAvailableList(config.rouletteType());
+        List<BetType> availableTypes = BetType.availableList(config.rouletteType());
         for (Spot spot : state.getMarket().getHistory()) {
             for (BetType betType : availableTypes) {
                 if (BetHelper.isWin(betType, spot)) {

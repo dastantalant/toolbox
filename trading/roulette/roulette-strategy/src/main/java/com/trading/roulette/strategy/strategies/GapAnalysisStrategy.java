@@ -38,7 +38,7 @@ public class GapAnalysisStrategy extends AbstractStrategy {
         this.bettingAttemptsCounter = new EnumMap<>(Spot.class);
 
         // Инициализация нулями
-        for (Spot spot : Spot.getAvailableList(config.rouletteType())) {
+        for (Spot spot : Spot.availableList(config.rouletteType())) {
             currentGaps.put(spot, 0);
         }
     }
@@ -80,7 +80,7 @@ public class GapAnalysisStrategy extends AbstractStrategy {
     @Override
     public void onRoundCustom(Spot outcome, List<Bet> bets) {
         // 1. Обновляем Гэпы (Gaps)
-        List<Spot> allSpots = Spot.getAvailableList(getConfig().rouletteType());
+        List<Spot> allSpots = Spot.availableList(getConfig().rouletteType());
 
         for (Spot spot : allSpots) {
             if (spot == outcome) {

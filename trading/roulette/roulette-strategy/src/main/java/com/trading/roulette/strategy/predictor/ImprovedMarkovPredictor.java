@@ -135,7 +135,7 @@ public class ImprovedMarkovPredictor implements Predictor {
     }
 
     private List<BetType> findTypes(Spot spot, RouletteType rouletteType) {
-        return BetType.getAvailableList(rouletteType).stream()
+        return BetType.availableList(rouletteType).stream()
                 .filter(type -> BetHelper.isWin(type, spot))
                 .toList();
     }

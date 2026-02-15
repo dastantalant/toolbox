@@ -1,6 +1,5 @@
 package com.trading.roulette.api.runner.supplier;
 
-import com.trading.roulette.api.enums.Constants;
 import com.trading.roulette.api.enums.RouletteType;
 import com.trading.roulette.api.enums.Spot;
 import com.trading.roulette.api.enums.GenerateType;
@@ -22,7 +21,7 @@ public class RandomSpotSupplier extends BaseSpotSupplier {
         super(rouletteType, maxGenerations);
         this.generateType = generateType;
         rng = RandomGeneratorFactory.of("L128X256MixRandom").create(seed);
-        List<Spot> allSpots = Spot.getAvailableList(rouletteType);
+        List<Spot> allSpots = Spot.availableList(rouletteType);
         pool = switch (generateType) {
             case RANDOM, ROTATION_NUMBER, ROTATION_WHEEL -> allSpots;
             case RANDOM_RED_ONLY -> allSpots.stream().filter(Spot::isRed).toList();

@@ -20,7 +20,7 @@ public class RandomStrategy extends AbstractStrategy {
     @Override
     public List<Bet> decide() {
         List<Bet> betList = new ArrayList<>();
-        List<BetType> betTypeList = BetType.getAvailableList(getConfig().rouletteType());
+        List<BetType> betTypeList = BetType.availableList(getConfig().rouletteType());
         for (int i = 0; i < Constants.RANDOM.nextInt(100); i++) {
             BetType type = betTypeList.get(Constants.RANDOM.nextInt(betTypeList.size()));
             betList.add(Bet.of(type,getMinBet() * (Constants.RANDOM.nextInt(10) + 1)));

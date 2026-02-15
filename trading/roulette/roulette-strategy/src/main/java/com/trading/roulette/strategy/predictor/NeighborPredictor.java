@@ -22,11 +22,11 @@ public class NeighborPredictor implements Predictor {
         if (lastSpot == null) return List.of();
 
         // Получаем раскладку колеса (Европа/Америка)
-        Spot[] layout = Spot.getWheelLayouts().get(config.rouletteType());
+        Spot[] layout = Spot.wheelLayouts().get(config.rouletteType());
         if (layout == null) return List.of();
 
         int wheelSize = layout.length;
-        int lastPos = lastSpot.getWheelPosition(config.rouletteType());
+        int lastPos = lastSpot.wheelPosition(config.rouletteType());
 
         if (lastPos == -1) return List.of();
 
