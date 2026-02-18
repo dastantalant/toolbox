@@ -44,8 +44,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <target>${java.version}</target>
-                    <source>${java.version}</source>
+                    <target>11</target>
+                    <source>11</source>
                     <compilerArgs>
                         <arg>--add-modules</arg>
                         <arg>jdk.incubator.vector</arg>
