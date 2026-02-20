@@ -56,7 +56,7 @@ public abstract class AbstractStrategy implements IStrategy {
             try {
                 Spot spot = Spot.byNumber(number);
                 market.addSpot(spot);
-            } catch (Exception _) {
+            } catch (Exception e) {
             }
         }
         return State.of(config, market);

@@ -41,7 +41,7 @@ public abstract class BaseManager extends AbstractStrategy implements Manager {
     public Optional<IStrategy> create(Class<? extends IStrategy> clazz, Config config) {
         try {
             return Optional.of(clazz.getConstructor(Config.class).newInstance(config));
-        } catch (Exception _) {
+        } catch (Exception e) {
             return Optional.empty();
         }
     }

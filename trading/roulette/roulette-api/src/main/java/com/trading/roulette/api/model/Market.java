@@ -24,7 +24,7 @@ public class Market {
     public void addSpot(Spot spot) {
         if (spotHistory.size() >= Constants.SPOT_HISTORY_LIST_SIZE) {
             Spot removedSpot = spotHistory.pollFirst();
-            spotFrequencies.compute(removedSpot, (_, count) -> count == null || count <= 1 ? null : count - 1);
+            spotFrequencies.compute(removedSpot, (s, count) -> count == null || count <= 1 ? null : count - 1);
         }
         spotHistory.addLast(spot);
         spotFrequencies.merge(spot, 1, Integer::sum);

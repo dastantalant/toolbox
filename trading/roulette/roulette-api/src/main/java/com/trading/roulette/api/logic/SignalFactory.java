@@ -12,12 +12,12 @@ public final class SignalFactory {
 
     public static SignalGenerator create(Config config) {
         return switch (config.signalType()) {
-            case RED -> _ -> List.of(BetType.RED);
-            case BLACK -> _ -> List.of(BetType.BLACK);
+            case RED -> r -> List.of(BetType.RED);
+            case BLACK -> r -> List.of(BetType.BLACK);
             case RANDOM -> new RandomSignalGenerator(config);
             case HOT_NUMBERS -> new HotNumbersSignal(3);
             case COLD_NUMBERS -> new HotNumbersSignal(3, true);
-            case NONE -> _ -> List.of();
+            case NONE -> r -> List.of();
             default -> throw new IllegalArgumentException("Unsupported signal type: " + config.signalType());
         };
     }
