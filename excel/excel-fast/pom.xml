@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.toolbox.excel</groupId>
         <artifactId>excel</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
 
     <artifactId>excel-fast</artifactId>
@@ -27,22 +27,4 @@
             <artifactId>aalto-xml</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>com.toolbox.excel</groupId>
-                            <artifactId>excel-processor</artifactId>
-                            <version>${project.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

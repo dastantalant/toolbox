@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.toolbox</groupId>
         <artifactId>toolbox</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
 
     <packaging>pom</packaging>
@@ -29,31 +29,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.toolbox.excel</groupId>
-                <artifactId>excel-api</artifactId>
-                <version>${project.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.toolbox.excel</groupId>
-                <artifactId>excel-fast</artifactId>
-                <version>${project.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.toolbox.excel</groupId>
-                <artifactId>excel-poi</artifactId>
-                <version>${project.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.toolbox.excel</groupId>
-                <artifactId>excel-processor</artifactId>
-                <version>${project.version}</version>
-                <scope>compile</scope>
-            </dependency>
-
             <dependency>
                 <groupId>com.fasterxml</groupId>
                 <artifactId>aalto-xml</artifactId>

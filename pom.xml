@@ -7,18 +7,20 @@
 
     <groupId>com.toolbox</groupId>
     <artifactId>toolbox</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>core</module>
         <module>excel</module>
         <module>trading</module>
+        <module>io</module>
+        <module>csv</module>
     </modules>
 
     <properties>
-        <java.version>25</java.version>
-        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <java.release.version>25</java.release.version>
+        <maven.compiler.release>${java.release.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <jspecify.version>1.0.0</jspecify.version> <!-- Jul 16, 2024 -->
@@ -26,7 +28,7 @@
         <junit.version>6.0.1</junit.version> <!-- Oct 31, 2025 -->
         <assertj.version>3.27.7</assertj.version> <!-- Jan 24, 2026 -->
 
-        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version> <!-- Feb 01, 2026 -->
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version> <!-- Feb 01, 2026 -->
     </properties>
 
     <dependencyManagement>
@@ -34,6 +36,37 @@
             <dependency>
                 <groupId>com.toolbox</groupId>
                 <artifactId>core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toolbox.excel</groupId>
+                <artifactId>excel-api</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toolbox.excel</groupId>
+                <artifactId>excel-fast</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toolbox.excel</groupId>
+                <artifactId>excel-poi</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.toolbox.excel</groupId>
+                <artifactId>excel-processor</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.toolbox.io</groupId>
+                <artifactId>io-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -69,8 +102,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <target>11</target>
-                    <source>11</source>
+                    <target>${java.release.version}</target>
+                    <source>${java.release.version}</source>
                     <compilerArgs>
                         <arg>--add-modules</arg>
                         <arg>jdk.incubator.vector</arg>
