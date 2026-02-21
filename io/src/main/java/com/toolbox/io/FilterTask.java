@@ -1,0 +1,139 @@
+package com.toolbox.io;
+
+/// A FilterTask represents an input block to be transformed, together with an output block to
+/// write the data to. Filter implementations must not rely on the identity of FilterTask
+/// objects. Additional tasks for continuations after an overflow or underflow may use the same
+/// FilterTask or a different one. State that needs to be kept around for the duration of a
+/// partition can be stored in the [#data] field.
+///
+/// @param <Data> The type of the filter implementation's [#data].
+public abstract class FilterTask<Data> {
+    /// The task starts a new partition with a new input block and a new output block
+    public static final byte STATE_NEW = 0;
+
+    /// The task is resubmitted with a new output block after an overflow
+    public static final byte STATE_OVERFLOWED = 1;
+
+    /// The task is resubmitted with a new input block after an underflow. This can only happen
+    /// when a fixed partition size is set. If this is the last input block in the stream, it may
+    /// be empty.
+    public static final byte STATE_UNDERFLOWED = 2;
+
+    /// The output block to which the filter should write. Filter implementations can use the
+    /// primitive writing methods, or write directly (using [UncheckedOutput]) to `to.buf` and set
+    /// `to.start` and `to.pos` accordingly.
+    private WritableBuffer<?> writableBuffer;
+
+    /// The input block's buffer.
+    private byte[] buffer;
+
+    /// The first used index in [#buffer]. A filter implementation may update this before
+    /// producing an overflow to keep track of how much data it has already processed.
+    private int start;
+
+    /// The index after the last used index in [#buffer].
+    private int end;
+
+    /// Partition-specific data for use by filter implementations, initially set to `null` in a
+    /// new partition. This object is carried over from each [FilterTask] of a partition to the next.
+    /// When used to hold resources that must be closed manually, this should be done at the end
+    /// of the partition (i.e. [#isLastInPartition] was true, and no overflow produced).
+    private Data data;
+
+    /// One of [#STATE_NEW], [#STATE_OVERFLOWED] and [#STATE_UNDERFLOWED].
+    private byte state;
+    public boolean isConsumed;
+    private boolean isLastInPartition;
+
+    /// Mark the input as consumed. Returning without consuming the input indicates an overflow.
+    public void consume() {
+        isConsumed = true;
+    }
+
+    /// Check if this is the last input block in a partition
+    public boolean isLast() {
+        return isLastInPartition;
+    }
+
+    /// Check if the input block is empty. Unless the filter implementation caused this on its
+    /// own by updating [#start] or [#end], this can only happen in non-batched partitioned mode
+    /// where an empty block is used to terminate the last partition before the end of the stream
+    /// or an explicit [BufferedOutput#flush()].
+    public boolean isEmpty() {
+        return start == end;
+    }
+
+    /// Check if the input block is new (i.e. `state != STATE_OVERFLOWED`)
+    public boolean isNew() {
+        return state != STATE_OVERFLOWED;
+    }
+
+    /// Return the length of the input block (`end - start`)
+    public int length() {
+        return end - start;
+    }
+
+    public WritableBuffer<?> getWritableBuffer() {
+        return writableBuffer;
+    }
+
+    public void setWritableBuffer(WritableBuffer<?> writableBuffer) {
+        this.writableBuffer = writableBuffer;
+    }
+
+    public byte[] getBuffer() {
+        return buffer;
+    }
+
+    public void setBuffer(byte[] buffer) {
+        this.buffer = buffer;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public void setEnd(int end) {
+        this.end = end;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
+    }
+
+    public byte getState() {
+        return state;
+    }
+
+    public void setState(byte state) {
+        this.state = state;
+    }
+
+    public boolean isConsumed() {
+        return isConsumed;
+    }
+
+    public void setConsumed(boolean consumed) {
+        isConsumed = consumed;
+    }
+
+    public boolean isLastInPartition() {
+        return isLastInPartition;
+    }
+
+    public void setLastInPartition(boolean lastInPartition) {
+        isLastInPartition = lastInPartition;
+    }
+}

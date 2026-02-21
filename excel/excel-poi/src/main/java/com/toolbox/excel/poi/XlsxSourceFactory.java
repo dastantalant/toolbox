@@ -3,6 +3,7 @@ package com.toolbox.excel.poi;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.ReadOnlySharedStringsTable;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
+import org.apache.poi.xssf.model.StylesTable;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -26,8 +27,8 @@ public class XlsxSourceFactory {
             pkg = OPCPackage.open(file);
             XSSFReader xssfReader = new XSSFReader(pkg);
 
-            var strings = new ReadOnlySharedStringsTable(pkg);
-            var styles = xssfReader.getStylesTable();
+            ReadOnlySharedStringsTable strings = new ReadOnlySharedStringsTable(pkg);
+            StylesTable styles = xssfReader.getStylesTable();
 
             XSSFReader.SheetIterator iter = (XSSFReader.SheetIterator) xssfReader.getSheetsData();
             sheetStream = findSheet(iter, sheetName);

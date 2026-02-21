@@ -20,7 +20,6 @@
     </modules>
 
     <properties>
-        <!--        <maven.compiler.release>25</maven.compiler.release>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <jspecify.version>1.0.0</jspecify.version> <!-- Jul 16, 2024 -->
@@ -30,8 +29,6 @@
 
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version> <!-- Feb 01, 2026 -->
         <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version> <!-- Nov 15, 2025 -->
-        <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version> <!-- Jun 04, 2025 -->
-        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version> <!-- Sep 10, 2025 -->
     </properties>
 
     <dependencyManagement>
@@ -143,17 +140,16 @@
                         </goals>
                         <configuration>
                             <release>17</release>
-<!--                            <compilerArgs>-->
-<!--                                <arg>&#45;&#45;add-modules</arg>-->
-<!--                                <arg>jdk.incubator.vector</arg>-->
-<!--                            </compilerArgs>-->
+                            <compilerArgs>
+                                <arg>--add-modules</arg>
+                                <arg>jdk.incubator.vector</arg>
+                            </compilerArgs>
                             <compileSourceRoots>
                                 <compileSourceRoot>${project.basedir}/src/main/java17</compileSourceRoot>
                             </compileSourceRoots>
                             <multiReleaseOutput>true</multiReleaseOutput>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>java21</id>
                         <phase>compile</phase>
@@ -162,17 +158,16 @@
                         </goals>
                         <configuration>
                             <release>21</release>
-<!--                            <compilerArgs>-->
-<!--                                <arg>&#45;&#45;add-modules</arg>-->
-<!--                                <arg>jdk.incubator.vector</arg>-->
-<!--                            </compilerArgs>-->
+                            <compilerArgs>
+                                <arg>--add-modules</arg>
+                                <arg>jdk.incubator.vector</arg>
+                            </compilerArgs>
                             <compileSourceRoots>
                                 <compileSourceRoot>${project.basedir}/src/main/java21</compileSourceRoot>
                             </compileSourceRoots>
                             <multiReleaseOutput>true</multiReleaseOutput>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>java25</id>
                         <phase>compile</phase>
@@ -181,10 +176,10 @@
                         </goals>
                         <configuration>
                             <release>25</release>
-<!--                            <compilerArgs>-->
-<!--                                <arg>&#45;&#45;add-modules</arg>-->
-<!--                                <arg>jdk.incubator.vector</arg>-->
-<!--                            </compilerArgs>-->
+                            <compilerArgs>
+                                <arg>--add-modules</arg>
+                                <arg>jdk.incubator.vector</arg>
+                            </compilerArgs>
                             <compileSourceRoots>
                                 <compileSourceRoot>${project.basedir}/src/main/java25</compileSourceRoot>
                             </compileSourceRoots>
@@ -208,40 +203,4 @@
             </plugin>
         </plugins>
     </build>
-<!--    <profiles>-->
-<!--        <profile>-->
-<!--            <id>ide</id>-->
-<!--            <activation>-->
-<!--                <property>-->
-<!--                    <name>idea.version</name>-->
-<!--                </property>-->
-<!--            </activation>-->
-<!--            <build>-->
-<!--                <plugins>-->
-<!--                    <plugin>-->
-<!--                        <groupId>org.codehaus.mojo</groupId>-->
-<!--                        <artifactId>build-helper-maven-plugin</artifactId>-->
-<!--                        <version>${build-helper-maven-plugin.version}</version>-->
-<!--                        <executions>-->
-<!--                            <execution>-->
-<!--                                <id>add-source-for-ide</id>-->
-<!--                                <phase>generate-sources</phase>-->
-<!--                                <goals>-->
-<!--                                    <goal>add-source</goal>-->
-<!--                                </goals>-->
-<!--                                <configuration>-->
-<!--                                    <sources>-->
-<!--                                        <source>${project.basedir}/src/main/java11</source>-->
-<!--                                        <source>${project.basedir}/src/main/java17</source>-->
-<!--                                        <source>${project.basedir}/src/main/java21</source>-->
-<!--                                        <source>${project.basedir}/src/main/java25</source>-->
-<!--                                    </sources>-->
-<!--                                </configuration>-->
-<!--                            </execution>-->
-<!--                        </executions>-->
-<!--                    </plugin>-->
-<!--                </plugins>-->
-<!--            </build>-->
-<!--        </profile>-->
-<!--    </profiles>-->
 </project>

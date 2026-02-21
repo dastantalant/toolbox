@@ -1,11 +1,9 @@
 package com.toolbox.io;
 
-import com.toolbox.io.buffer.BufferedInput;
-
 import java.io.Closeable;
 import java.lang.foreign.MemorySegment;
 
-public class MemorySegmentFactory extends Factory {
+public class MemorySegmentFactory extends BaseFactory {
 
     /**
      * Read data from a [MemorySegment] using the default [ByteOrder#BIG_ENDIAN]. Use

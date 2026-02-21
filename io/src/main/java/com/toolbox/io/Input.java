@@ -1,7 +1,5 @@
 package com.toolbox.io;
 
-import com.toolbox.io.text.tokenizer.LineTokenizer;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.charset.Charset;

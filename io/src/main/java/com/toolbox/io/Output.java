@@ -1,7 +1,5 @@
 package com.toolbox.io;
 
-import com.toolbox.io.text.output.TextOutput;
-
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;

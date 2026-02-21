@@ -1,4 +1,3 @@
-module com.traderoom.io {
-    requires jdk.incubator.vector;
+module com.toolbox.io {
     exports com.toolbox.io;
 }

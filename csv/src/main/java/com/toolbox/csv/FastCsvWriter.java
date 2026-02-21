@@ -3,7 +3,7 @@ package com.toolbox.csv;
 import com.toolbox.csv.annotation.CsvFile;
 import com.toolbox.csv.meta.CsvFieldMeta;
 import com.toolbox.csv.meta.MetadataCache;
-import com.toolbox.io.Factory;
+import com.toolbox.io.BaseFactory;
 import com.toolbox.io.Output;
 
 import java.io.Flushable;
@@ -37,7 +37,7 @@ public final class FastCsvWriter<T> implements Flushable, AutoCloseable {
 
     public static <T> void write(Class<T> type, Collection<T> data, Path path, OpenOption... option) {
         if (data.isEmpty()) return;
-        try (Output output = Factory.INSTANCE.writerOf(path, option);
+        try (Output output = BaseFactory.INSTANCE.writerOf(path, option);
              FastCsvWriter<T> writer = new FastCsvWriter<>(type, output)) {
             writer.write(data);
         } catch (Throwable e) {
