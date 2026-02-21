@@ -20,7 +20,6 @@ public class ParserRegistry {
     public <T> CellParser<T> get(Class<T> type) {
         CellParser<T> parser = (CellParser<T>) parsers.get(type);
         if (parser != null) return parser;
-
         if (type.isEnum()) {
             EnumParser enumParser = new EnumParser(type);
             parsers.put(type, enumParser);

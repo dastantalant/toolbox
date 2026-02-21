@@ -1,13 +1,17 @@
 package com.toolbox.core;
 
 import com.toolbox.core.reflect.ClassScanner;
+import com.toolbox.core.util.ClassUtil;
+import com.toolbox.core.util.StringUtil;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,15 +21,17 @@ public class ApplicationContext {
     private final Map<String, Class<?>> byName;
 
     public ApplicationContext(Package aPackage) {
-        classes = Set.copyOf(new ClassScanner().scan(aPackage));
-        byName = classes.stream()
-                .collect(Collectors.toUnmodifiableMap(Class::getName, c -> c));
+        this(aPackage.getName());
     }
 
     public ApplicationContext(String aPackage) {
-        classes = Set.copyOf(new ClassScanner().scan(aPackage));
+        this(Collections.unmodifiableSet(new HashSet<>(new ClassScanner().scan(aPackage))));
+    }
+
+    private ApplicationContext(Set<Class<?>> classes) {
+        this.classes = classes;
         byName = classes.stream()
-                .collect(Collectors.toUnmodifiableMap(Class::getName, c -> c));
+                .collect(Collectors.toMap(Class::getName, Function.identity()));
     }
 
     // =================================================================================================================
@@ -77,14 +83,12 @@ public class ApplicationContext {
 
     private Set<Class<?>> findSet(Stream<String> names) {
         return findStream(names)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toSet());
     }
 
     // =================================================================================================================
     public Stream<Class<?>> classesInPackageStream(String basePackage) {
-        if (!valid(basePackage)) {
-            return Stream.empty();
-        }
+        if (!valid(basePackage)) return Stream.empty();
         return classes.stream()
                 .filter(isInsidePackage(basePackage));
     }
@@ -101,15 +105,11 @@ public class ApplicationContext {
         Set<String> prefixes = packagePrefixes
                 .filter(this::valid)
                 .collect(Collectors.toSet());
-        if (prefixes.isEmpty()) {
-            return Stream.empty();
-        }
+        if (prefixes.isEmpty()) return Stream.empty();
         Predicate<Class<?>> inAnyPackage = clazz -> {
-            String pkgName = clazz.getPackageName();
-            return prefixes.stream().anyMatch(prefix ->
-                    pkgName.equals(prefix) || pkgName.startsWith(prefix + "."));
+            String pkg = ClassUtil.getPackageName(clazz);
+            return prefixes.stream().anyMatch(prefix -> pkg.equals(prefix) || pkg.startsWith(prefix + "."));
         };
-
         return classes.stream().filter(inAnyPackage);
     }
 
@@ -123,7 +123,7 @@ public class ApplicationContext {
 
     private Set<Class<?>> classesInPackagesSet(Stream<String> packages) {
         return classesInPackagesStream(packages)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toSet());
     }
 
     public Set<Class<?>> classesInPackage(Package aPackage) {
@@ -134,12 +134,12 @@ public class ApplicationContext {
 
     private Predicate<Class<?>> isInsidePackage(String basePackage) {
         return clazz -> {
-            String className = clazz.getPackageName();
+            String className = ClassUtil.getPackageName(clazz);
             return className.equals(basePackage) || className.startsWith(basePackage + ".");
         };
     }
 
     private boolean valid(String value) {
-        return value != null && !value.isBlank();
+        return value != null && !StringUtil.isBlank(value);
     }
 }

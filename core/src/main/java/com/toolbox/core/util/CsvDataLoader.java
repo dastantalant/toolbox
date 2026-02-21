@@ -13,10 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CsvDataLoader {
-
-    private CsvDataLoader() {
-    }
-
+    private CsvDataLoader() {}
     public static Deque<Integer> load(String filePath) {
         try {
             return load(Paths.get(filePath));
@@ -26,11 +23,8 @@ public class CsvDataLoader {
         return new LinkedList<>();
     }
 
-
     public static Deque<Integer> load(Path path) throws IOException {
-        if (!Files.exists(path)) {
-            throw new FileNotFoundException("Файл не найден: " + path);
-        }
+        if (!Files.exists(path)) throw new FileNotFoundException("Файл не найден: " + path);
         try (Stream<String> lines = Files.lines(path)) {
             return lines
                     .skip(1)

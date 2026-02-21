@@ -246,7 +246,7 @@ public final class ProjectDump {
                     int b = buf.get() & 0xFF;
                     byte cls = CLASS[b];
                     switch (state) {
-                        case NORMAL -> {
+                        case NORMAL : {
                             if (prev == SLASH && b == SLASH) {
                                 lineLen--;
                                 state = State.LINE_COMMENT;
@@ -259,18 +259,21 @@ public final class ProjectDump {
                             } else {
                                 lineBuf[lineLen++] = (char) b;
                             }
+                            break;
                         }
-                        case LINE_COMMENT -> {
+                        case LINE_COMMENT : {
                             if (cls == 3) {
                                 state = State.NORMAL;
                                 flushLine(w, lineBuf, lineLen);
                                 lineLen = 0;
                             }
+                            break;
                         }
-                        case BLOCK_COMMENT -> {
+                        case BLOCK_COMMENT : {
                             if (prev == STAR && b == SLASH) {
                                 state = State.NORMAL;
                             }
+                            break;
                         }
                     }
                     prev = b;

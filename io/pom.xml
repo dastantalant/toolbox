@@ -9,12 +9,6 @@
         <version>0.0.4</version>
     </parent>
 
-    <groupId>com.toolbox.io</groupId>
     <artifactId>io</artifactId>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>io-core</module>
-    </modules>
 
 </project>

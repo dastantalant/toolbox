@@ -13,6 +13,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.toolbox</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <scope>compile</scope>

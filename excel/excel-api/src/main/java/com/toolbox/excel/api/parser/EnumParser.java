@@ -1,5 +1,6 @@
 package com.toolbox.excel.api.parser;
 
+import com.toolbox.core.util.StringUtil;
 import com.toolbox.excel.api.CellParser;
 import com.toolbox.excel.api.context.DeserializationContext;
 
@@ -12,7 +13,7 @@ public class EnumParser<E extends Enum<E>> implements CellParser<E> {
 
     @Override
     public E parse(String value, DeserializationContext context) {
-        if (value == null || value.isBlank()) return null;
+        if (value == null || StringUtil.isBlank(value)) return null;
         String trimmed = value.trim();
         for (E constant : type.getEnumConstants()) {
             if (constant.name().equalsIgnoreCase(trimmed)) {

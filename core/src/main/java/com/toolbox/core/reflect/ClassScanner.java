@@ -51,7 +51,7 @@ public class ClassScanner {
                 URL resource = resources.nextElement();
                 FastLogger.debug("Resource found for package '{}': {}", packageName, resource);
                 if ("file".equals(resource.getProtocol())) {
-                    findClassesInDirectory(new File(URLDecoder.decode(resource.getFile(), StandardCharsets.UTF_8)), packageName, classes);
+                    findClassesInDirectory(new File(URLDecoder.decode(resource.getFile(), StandardCharsets.UTF_8.name())), packageName, classes);
                 } else if ("jar".equals(resource.getProtocol())) {
                     findClassesInJar(resource, packageName, classes);
                 }

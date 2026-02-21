@@ -1,5 +1,7 @@
 package com.toolbox.core.logging;
 
+import com.toolbox.core.util.StringUtil;
+
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,34 +12,17 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Properties;
-import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class FastLogger {
 
-    public enum Level {
-        TRACE(0), DEBUG(1), INFO(2), WARN(3), ERROR(4);
-        private final int code;
-
-        Level(int code) {
-            this.code = code;
-        }
-
-        public int getCode() {
-            return code;
-        }
-    }
-
     private static final int CAPACITY = 8192;
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
     private static final String PLACEHOLDER = "{}";
     private static final int WIDTH = 35;
-    private static final StackWalker WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
-    private static final Set<Class<?>> INTERNAL_CLASSES = Set.of(FastLogger.class, Level.class, Entry.class);
 
     private static volatile Level level = Level.INFO;
     private static final BlockingQueue<Entry> QUEUE;
@@ -93,7 +78,9 @@ public class FastLogger {
         SPACE = " ".getBytes(CHARSET);
         NL = System.lineSeparator().getBytes(CHARSET);
         EXCEPTION = " - Exception: ".getBytes(CHARSET);
-        PADDING_SPACES = " ".repeat(WIDTH).getBytes(CHARSET);
+
+        PADDING_SPACES = new byte[WIDTH];
+        Arrays.fill(PADDING_SPACES, (byte) ' ');
         for (Level lvl : Level.values()) {
             StringBuilder sb = new StringBuilder();
             sb.append(lvl.name());
@@ -180,9 +167,9 @@ public class FastLogger {
                     out.write(SPACE);
                     String location;
                     if (entry.frame() != null) {
-                        String full = entry.frame().getClassName();
+                        String full = entry.getClassName();
                         String simple = full.substring(full.lastIndexOf('.') + 1);
-                        location = "(" + simple + ".java:" + entry.frame().getLineNumber() + ")";
+                        location = "(" + simple + ".java:" + entry.getLineNumber() + ")";
                     } else {
                         location = "(Unknown Source)";
                     }
@@ -196,7 +183,7 @@ public class FastLogger {
                     write(out, message);
                     if (entry.throwable() != null) {
                         out.write(EXCEPTION);
-                        PrintStream ps = new PrintStream(out, false, CHARSET);
+                        PrintStream ps = new PrintStream(out, false, CHARSET.name());
                         entry.throwable().printStackTrace(ps);
                         ps.flush();
                     }
@@ -254,9 +241,9 @@ public class FastLogger {
 
     private static String getProperty(String key) {
         String value = System.getProperty(key);
-        if (value != null && !value.isBlank()) return value;
+        if (value != null && !StringUtil.isBlank(value)) return value;
         value = System.getenv(key.replace('.', '_').toUpperCase());
-        if (value != null && !value.isBlank()) return value;
+        if (value != null && !StringUtil.isBlank(value)) return value;
         return getPropertyFromFile(key);
     }
 
@@ -278,51 +265,5 @@ public class FastLogger {
             cachedTimestamp = LocalDateTime.now().format(FMT);
         }
         return cachedTimestamp;
-    }
-
-    private record Entry(
-            Level level,
-            String pattern,
-            Object[] args,
-            Throwable throwable,
-            StackWalker.StackFrame frame
-    ) {
-        public static Entry of(Level level, String pattern, Throwable throwable, Object... args) {
-            StackWalker.StackFrame stackFrame = WALKER.walk(frames -> frames
-                    .filter(frame -> !INTERNAL_CLASSES.contains(frame.getDeclaringClass()))
-                    .findFirst()
-                    .orElse(null));
-            return new Entry(level, pattern, args, throwable, stackFrame);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Entry entry = (Entry) o;
-            return level == entry.level &&
-                    Objects.equals(pattern, entry.pattern) &&
-                    Arrays.equals(args, entry.args) &&
-                    Objects.equals(throwable, entry.throwable) &&
-                    Objects.equals(frame, entry.frame);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = Objects.hash(level, pattern, throwable, frame);
-            result = 31 * result + Arrays.hashCode(args);
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            return "Entry[" +
-                    "level=" + level +
-                    ", pattern='" + pattern + '\'' +
-                    ", args=" + Arrays.toString(args) +
-                    ", throwable=" + throwable +
-                    ", frame=" + frame +
-                    ']';
-        }
     }
 }

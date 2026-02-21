@@ -59,8 +59,7 @@ public class XlsxSourceFactory {
                 if (pkg != null) pkg.revert();
             } catch (Exception ignored) {
             }
-
-            throw new RuntimeException("Failed to open Excel file: " + file.getAbsolutePath(), e);
+            throw new ExcelPoiException("Failed to open Excel file: " + file.getAbsolutePath(), e);
         }
     }
 

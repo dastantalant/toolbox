@@ -51,8 +51,8 @@ public final class CharSequenceUtil {
      * @return Index of the first occurrence or -1 / Индекс вхождения или -1.
      */
     public static int indexOf(CharSequence sequence, String needle, int from) {
-        if (sequence instanceof String str) {
-            return str.indexOf(needle, from);
+        if (sequence instanceof String) {
+            return ((String) sequence).indexOf(needle, from);
         }
         int sourceCount = sequence.length();
         int targetCount = needle.length();

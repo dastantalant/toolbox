@@ -14,6 +14,30 @@ public class ExcelValidationException extends ExcelException {
         this.violations = violations;
     }
 
+    public ExcelValidationException(String message, int rowIndex, Set<? extends ConstraintViolation<?>> violations) {
+        super(message);
+        this.rowIndex = rowIndex;
+        this.violations = violations;
+    }
+
+    public ExcelValidationException(String message, Throwable cause, int rowIndex, Set<? extends ConstraintViolation<?>> violations) {
+        super(message, cause);
+        this.rowIndex = rowIndex;
+        this.violations = violations;
+    }
+
+    public ExcelValidationException(Throwable cause, int rowIndex, Set<? extends ConstraintViolation<?>> violations) {
+        super(cause);
+        this.rowIndex = rowIndex;
+        this.violations = violations;
+    }
+
+    public ExcelValidationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, int rowIndex, Set<? extends ConstraintViolation<?>> violations) {
+        super(message, cause, enableSuppression, writableStackTrace);
+        this.rowIndex = rowIndex;
+        this.violations = violations;
+    }
+
     public int getRowIndex() { return rowIndex; }
     public Set<? extends ConstraintViolation<?>> getViolations() { return violations; }
 

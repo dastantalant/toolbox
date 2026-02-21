@@ -7,6 +7,7 @@ import com.toolbox.excel.api.exception.ExcelValidationException;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+
 import java.util.Set;
 
 public class ValidatingRowMapper<T> implements RowMapper<T> {
@@ -21,12 +22,9 @@ public class ValidatingRowMapper<T> implements RowMapper<T> {
     @Override
     public T map(RowData row, DeserializationContext ctx) {
         T object = delegate.map(row, ctx);
-
         if (object != null) {
             Set<ConstraintViolation<T>> violations = validator.validate(object);
-            if (!violations.isEmpty()) {
-                throw new ExcelValidationException(row.getRowIndex(), violations);
-            }
+            if (!violations.isEmpty()) throw new ExcelValidationException(row.getRowIndex(), violations);
         }
         return object;
     }
