@@ -119,7 +119,7 @@ public final class ArrayBufferedOutput extends AccumulatingBufferedOutput {
     /// Create a new [BufferedInput] that can read the data. This method does not consume the data
     /// and can be used repeatedly or together with other buffer access methods.
     public BufferedInput toBufferedInput() throws IOException {
-        return BufferedInput.ofArray(buffer(), outstart, length());
+        return BaseFactory.INSTANCE.readerOfArray(buffer(), outstart, length());
     }
 
     /// Create a new [InputStream] that can read the data. This method does not consume the data

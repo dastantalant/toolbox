@@ -35,7 +35,6 @@ import java.nio.charset.StandardCharsets;
 /// A TextOutput is created by calling [BufferedOutput#text(Charset, String)] or one of its
 /// overloads.
 public abstract class TextOutput implements Closeable, Flushable {
-
     public static TextOutput of(BufferedOutput output, Charset charset, String eol) {
         if (charset == StandardCharsets.ISO_8859_1) return new Latin1TextOutput(output, eol.getBytes(charset));
         else if (charset == StandardCharsets.UTF_8) return new UTF8TextOutput(output, eol.getBytes(charset));

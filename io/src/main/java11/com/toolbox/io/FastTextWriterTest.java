@@ -1,5 +1,7 @@
 package com.toolbox.io;
 
+import com.toolbox.core.logging.FastLogger;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,19 +16,19 @@ public class FastTextWriterTest {
     private static final int ITERATIONS = 5_000_000;
 
     public static void main(String[] args) throws IOException {
-        System.out.println("=== 1. Проверка корректности (Functional Test) ===");
+        FastLogger.info("=== 1. Проверка корректности (Functional Test) ===");
         testCorrectness();
-        System.out.println("PASSED: Данные записываются корректно.\n");
+        FastLogger.info("PASSED: Данные записываются корректно.\n");
 
-        System.out.println("=== 2. Тест производительности (Benchmark) ===");
-        System.out.println("Simulating CSV writing of " + ITERATIONS + " rows...");
-        System.out.println("---------------------------------------------------");
+        FastLogger.info("=== 2. Тест производительности (Benchmark) ===");
+        FastLogger.info("Simulating CSV writing of " + ITERATIONS + " rows...");
+        FastLogger.info("---------------------------------------------------");
 
         // Прогрев JIT (Warmup) - чтобы Java скомпилировала код перед замером
-        System.out.print("Warming up JVM... ");
+        FastLogger.info("Warming up JVM... ");
         runStandardScenario(new NullOutputStream(), 100_000);
         runFastScenario(new NullOutputStream(), 100_000);
-        System.out.println("Done.");
+        FastLogger.info("Done.");
 
         // --- Замер стандартного подхода ---
         System.gc(); // Просим сборщик мусора очистить память перед стартом
@@ -45,7 +47,7 @@ public class FastTextWriterTest {
         printResults("FastTextWriter (Zero-Allocation)", timeFast, bytesFast);
 
         double speedup = (double) timeStd / timeFast;
-        System.out.printf("\n>>> FastTextWriter is %.2fx FASTER <<<\n", speedup);
+        FastLogger.info("\n>>> FastTextWriter is %.2fx FASTER <<<\n", speedup);
     }
 
     /**
@@ -129,7 +131,7 @@ public class FastTextWriterTest {
     private static void printResults(String name, long timeNs, long bytes) {
         double timeMs = timeNs / 1_000_000.0;
         double opsPerSec = (ITERATIONS / timeMs) * 1000;
-        System.out.printf("%-35s: %8.2f ms | %,12.0f rows/sec%n", name, timeMs, opsPerSec);
+        FastLogger.info("%-35s: %8.2f ms | %,12.0f rows/sec%n", name, timeMs, opsPerSec);
     }
 
     /**

@@ -7,7 +7,7 @@
 
     <groupId>com.toolbox</groupId>
     <artifactId>toolbox</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -69,12 +69,6 @@
                 <scope>compile</scope>
             </dependency>
 
-            <!-- todo -->
-            <dependency>
-                <groupId>com.ibm.icu</groupId>
-                <artifactId>icu4j</artifactId>
-                <version>78.2</version><!-- Jan 08, 2026 -->
-            </dependency>
             <dependency>
                 <groupId>org.jspecify</groupId>
                 <artifactId>jspecify</artifactId>

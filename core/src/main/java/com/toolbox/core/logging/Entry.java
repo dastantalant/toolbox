@@ -3,7 +3,7 @@ package com.toolbox.core.logging;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Entry {
+class Entry {
 
     private final Level level;
     private final String pattern;
@@ -11,7 +11,7 @@ public class Entry {
     private final Throwable throwable;
     private final StackWalkerFrame frame;
 
-    public Entry(Level level, String pattern, Object[] args, Throwable throwable, StackWalkerFrame frame) {
+    Entry(Level level, String pattern, Object[] args, Throwable throwable, StackWalkerFrame frame) {
         this.level = level;
         this.pattern = pattern;
         this.args = args;
@@ -19,35 +19,35 @@ public class Entry {
         this.frame = frame;
     }
 
-    public static Entry of(Level level, String pattern, Throwable throwable, Object... args) {
+    static Entry of(Level level, String pattern, Throwable throwable, Object... args) {
         return new Entry(level, pattern, args, throwable, StackWalkerFrame.frame());
     }
 
-    public Level level() {
+    Level level() {
         return level;
     }
 
-    public String pattern() {
+    String pattern() {
         return pattern;
     }
 
-    public Object[] args() {
+    Object[] args() {
         return args;
     }
 
-    public Throwable throwable() {
+    Throwable throwable() {
         return throwable;
     }
 
-    public StackWalkerFrame frame() {
+    StackWalkerFrame frame() {
         return frame;
     }
 
-    public String getClassName() {
+    String getClassName() {
         return frame == null ? "(Unknown Source)" : frame.getClassName();
     }
 
-    public int getLineNumber() {
+    int getLineNumber() {
         return frame == null ? 0 : frame.getLineNumber();
     }
 

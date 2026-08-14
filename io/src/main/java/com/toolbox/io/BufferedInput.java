@@ -31,11 +31,11 @@ public abstract class BufferedInput extends ReadableBuffer {
      * Same as `of(in, DEFAULT_BUFFER_SIZE)`.
      *
      * @param in InputStream from which to read data.
-     * @see #of(InputStream, int)
+     * @see # of(InputStream, int)
      */
-    public static BufferedInput of(InputStream in) {
-        return of(in, DEFAULT_BUFFER_SIZE);
-    }
+//    public static BufferedInput of(InputStream in) {
+//        return of(in, DEFAULT_BUFFER_SIZE);
+//    }
 
     /**
      * Read data from an [InputStream] using the default [ByteOrder#BIG_ENDIAN].
@@ -45,19 +45,19 @@ public abstract class BufferedInput extends ReadableBuffer {
      *                   affects the minimum block size to read from the InputStream. BufferedInput tries to read
      *                   at least half of bufferSize at once.
      */
-    public static BufferedInput of(InputStream in, int bufferSize) {
-        byte[] buf = new byte[Math.max(bufferSize, MIN_BUFFER_SIZE)];
-        return new StreamingHeapBufferedInput(buf, buf.length, buf.length, Long.MAX_VALUE, in, buf.length / 2, null, true);
-    }
+//    public static BufferedInput of(InputStream in, int bufferSize) {
+//        byte[] buf = new byte[Math.max(bufferSize, MIN_BUFFER_SIZE)];
+//        return new StreamingHeapBufferedInput(buf, buf.length, buf.length, Long.MAX_VALUE, in, buf.length / 2, null, true);
+//    }
 
     /**
      * Same as `ofArray(buf, 0, buf.length)`.
      *
-     * @see #ofArray(byte[], int, int)
+     * @see # ofArray(byte[], int, int)
      */
-    public static BufferedInput ofArray(byte[] buf) {
-        return ofArray(buf, 0, buf.length);
-    }
+//    public static BufferedInput ofArray(byte[] buf) {
+//        return ofArray(buf, 0, buf.length);
+//    }
 
     /**
      * Read data from part of a byte array using the default [ByteOrder#BIG_ENDIAN].
@@ -66,10 +66,10 @@ public abstract class BufferedInput extends ReadableBuffer {
      * @param offset Starting point within the array.
      * @param length Length of the data within the array.
      */
-    public static BufferedInput ofArray(byte[] buffer, int offset, int length) {
-        IndexCheckUtil.checkFromIndexSize(offset, length, buffer.length);
-        return new StreamingHeapBufferedInput(buffer, offset, offset + length, Long.MAX_VALUE, null, 0, null, true);
-    }
+//    public static BufferedInput ofArray(byte[] buffer, int offset, int length) {
+//        IndexCheckUtil.checkFromIndexSize(offset, length, buffer.length);
+//        return new StreamingHeapBufferedInput(buffer, offset, offset + length, Long.MAX_VALUE, null, 0, null, true);
+//    }
 
     /**
      * Read data from a [MemorySegment] using the default [ByteOrder#BIG_ENDIAN]. Use

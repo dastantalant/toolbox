@@ -31,20 +31,20 @@ public abstract class BufferedOutput extends WritableBuffer<BufferedOutput> impl
      * @param out        Stream to write to.
      * @param bufferSize Initial buffer size. The buffer is expanded later if necessary.
      */
-    public static BufferedOutput of(OutputStream out, int bufferSize) {
-        byte[] buf = new byte[Math.max(bufferSize, MIN_BUFFER_SIZE)];
-        return new FlushingBufferedOutput(buf, true, 0, 0, buf.length, bufferSize, false, Long.MAX_VALUE, out);
-    }
+//    public static BufferedOutput of(OutputStream out, int bufferSize) {
+//        byte[] buf = new byte[Math.max(bufferSize, MIN_BUFFER_SIZE)];
+//        return new FlushingBufferedOutput(buf, true, 0, 0, buf.length, bufferSize, false, Long.MAX_VALUE, out);
+//    }
 
     /**
      * Write data to an [OutputStream] using the default initial buffer size.
      *
      * @param out Stream to write to.
-     * @see #of(OutputStream, int)
+     * @see # of(OutputStream, int)
      */
-    public static BufferedOutput of(OutputStream out) {
-        return of(out, DEFAULT_BUFFER_SIZE);
-    }
+//    public static BufferedOutput of(OutputStream out) {
+//        return of(out, DEFAULT_BUFFER_SIZE);
+//    }
 
     /**
      * Write data to an internal byte array buffer that can be accessed directly or copied after
@@ -58,11 +58,11 @@ public abstract class BufferedOutput extends WritableBuffer<BufferedOutput> impl
      *                       created. This size is automatically expanded to [#MIN_BUFFER_SIZE] if the specified size is
      *                       lower.
      */
-    public static ArrayBufferedOutput growing(int rootBufferSize, int bufferSize) {
-        int ibs = Math.max(bufferSize, MIN_BUFFER_SIZE);
-        byte[] buf = new byte[Math.max(rootBufferSize, ibs)];
-        return new ArrayBufferedOutput(buf, true, 0, 0, buf.length, ibs, false);
-    }
+//    public static ArrayBufferedOutput growing(int rootBufferSize, int bufferSize) {
+//        int ibs = Math.max(bufferSize, MIN_BUFFER_SIZE);
+//        byte[] buf = new byte[Math.max(rootBufferSize, ibs)];
+//        return new ArrayBufferedOutput(buf, true, 0, 0, buf.length, ibs, false);
+//    }
 
     /**
      * Write data to an internal byte array buffer that can be accessed directly or copied after
@@ -72,11 +72,11 @@ public abstract class BufferedOutput extends WritableBuffer<BufferedOutput> impl
      * @param rootBufferSize Initial size of the root buffer. The buffer is expanded later if
      *                       necessary. This size is automatically expanded to `bufferSize` if the specified size
      *                       is lower.
-     * @see #growing(int, int)
+     * @see # growing(int, int)
      */
-    public static ArrayBufferedOutput growing(int rootBufferSize) {
-        return growing(rootBufferSize, DEFAULT_BUFFER_SIZE);
-    }
+//    public static ArrayBufferedOutput growing(int rootBufferSize) {
+//        return growing(rootBufferSize, DEFAULT_BUFFER_SIZE);
+//    }
 
     /**
      * Write data to an internal byte array buffer that can be accessed directly or copied after
@@ -84,11 +84,11 @@ public abstract class BufferedOutput extends WritableBuffer<BufferedOutput> impl
      * buffer size and default initial root buffer size. The size is limited to 2 GB (the maximum
      * size of a byte array).
      *
-     * @see #growing(int, int)
+     * @see # growing(int, int)
      */
-    public static ArrayBufferedOutput growing() {
-        return growing(DEFAULT_BUFFER_SIZE);
-    }
+//    public static ArrayBufferedOutput growing() {
+//        return growing(DEFAULT_BUFFER_SIZE);
+//    }
 
     /**
      * Write data to an internal buffer that can be read as an [InputStream] or [BufferedInput]
@@ -96,9 +96,9 @@ public abstract class BufferedOutput extends WritableBuffer<BufferedOutput> impl
      *
      * @param bufferSize Initial buffer size. The buffer is expanded later if necessary.
      */
-    public static AccumulatingBufferedOutput ofBlocks(int bufferSize) {
-        return new BlockBufferedOutput(true, bufferSize);
-    }
+//    public static AccumulatingBufferedOutput ofBlocks(int bufferSize) {
+//        return new BlockBufferedOutput(true, bufferSize);
+//    }
 
     /**
      * Write data to an internal buffer that can be read as an [InputStream] or [BufferedInput]
@@ -106,9 +106,9 @@ public abstract class BufferedOutput extends WritableBuffer<BufferedOutput> impl
      *
      * @see #ofBlocks(int)
      */
-    public static AccumulatingBufferedOutput ofBlocks() {
-        return ofBlocks(DEFAULT_BUFFER_SIZE);
-    }
+//    public static AccumulatingBufferedOutput ofBlocks() {
+//        return ofBlocks(DEFAULT_BUFFER_SIZE);
+//    }
 
     /**
      * Write data to a buffered pipe that can be read concurrently from another thread as an
@@ -121,19 +121,19 @@ public abstract class BufferedOutput extends WritableBuffer<BufferedOutput> impl
      *
      * @param bufferSize Initial buffer size. The buffer is expanded later if necessary.
      */
-    public static PipeBufferedOutput pipe(int bufferSize) {
-        return new PipeBufferedOutput(true, bufferSize, 2);
-    }
+//    public static PipeBufferedOutput pipe(int bufferSize) {
+//        return new PipeBufferedOutput(true, bufferSize, 2);
+//    }
 
     /**
      * Write data to a buffered pipe that can be read concurrently from another thread as an
      * [InputStream] or [BufferedInput] using the default initial buffer size.
      *
-     * @see #pipe(int)
+     * @see # pipe(int)
      */
-    public static PipeBufferedOutput pipe() {
-        return pipe(DEFAULT_BUFFER_SIZE);
-    }
+//    public static PipeBufferedOutput pipe() {
+//        return pipe(DEFAULT_BUFFER_SIZE);
+//    }
 
 
     /**
@@ -143,28 +143,28 @@ public abstract class BufferedOutput extends WritableBuffer<BufferedOutput> impl
      * @param bufferSize Initial buffer size for additional temporary buffers that may be
      *                   created when using [#defer(long)], otherwise unused.
      */
-    public static ArrayBufferedOutput ofArray(byte[] buf, int off, int len, int bufferSize) {
-        IndexCheckUtil.checkFromIndexSize(off, len, buf.length);
-        return new ArrayBufferedOutput(buf, true, off, off, len + off, bufferSize, true);
-    }
+//    public static ArrayBufferedOutput ofArray(byte[] buf, int off, int len, int bufferSize) {
+//        IndexCheckUtil.checkFromIndexSize(off, len, buf.length);
+//        return new ArrayBufferedOutput(buf, true, off, off, len + off, bufferSize, true);
+//    }
 
     /**
      * Write data to a given byte array. Same as `ofArray(buffer, 0, buffer.length)`.
      *
      * @see #ofArray(byte[], int, int, int)
      */
-    public static ArrayBufferedOutput ofArray(byte[] buffer) {
-        return ofArray(buffer, 0, buffer.length, DEFAULT_BUFFER_SIZE);
-    }
+//    public static ArrayBufferedOutput ofArray(byte[] buffer) {
+//        return ofArray(buffer, 0, buffer.length, DEFAULT_BUFFER_SIZE);
+//    }
 
     /**
      * Write data to a given region of an existing byte array.
      *
      * @see #ofArray(byte[], int, int, int)
      */
-    public static ArrayBufferedOutput ofArray(byte[] buffer, int start, int len) {
-        return ofArray(buffer, start, len, DEFAULT_BUFFER_SIZE);
-    }
+//    public static ArrayBufferedOutput ofArray(byte[] buffer, int start, int len) {
+//        return ofArray(buffer, start, len, DEFAULT_BUFFER_SIZE);
+//    }
 
     /**
      * Write data to a file.
@@ -174,18 +174,18 @@ public abstract class BufferedOutput extends WritableBuffer<BufferedOutput> impl
      * @param option     Optional set of OpenOptions. When empty, the default set (`CREATE`,
      *                   `TRUNCATE_EXISTING`, `WRITE`) is used.
      */
-    public static BufferedOutput ofFile(Path path, int bufferSize, OpenOption... option) throws IOException {
-        OutputStream out = Files.newOutputStream(path, option);
-        return of(out, bufferSize);
-    }
+//    public static BufferedOutput ofFile(Path path, int bufferSize, OpenOption... option) throws IOException {
+//        OutputStream out = Files.newOutputStream(path, option);
+//        return of(out, bufferSize);
+//    }
 
-    public static BufferedOutput ofFile(Path path, OpenOption... option) throws IOException {
-        return ofFile(path, DEFAULT_BUFFER_SIZE, option);
-    }
-
-    public static BufferedOutput ofFile(Path path) throws IOException {
-        return ofFile(path, DEFAULT_BUFFER_SIZE);
-    }
+//    public static BufferedOutput ofFile(Path path, OpenOption... option) throws IOException {
+//        return ofFile(path, DEFAULT_BUFFER_SIZE, option);
+//    }
+//
+//    public static BufferedOutput ofFile(Path path) throws IOException {
+//        return ofFile(path, DEFAULT_BUFFER_SIZE);
+//    }
 
     public static final int MIN_BUFFER_SIZE = Native.INSTANCE.vectorLength() * 2;
     public static final int DEFAULT_BUFFER_SIZE = Native.DEFAULT_BUFFER_SIZE;

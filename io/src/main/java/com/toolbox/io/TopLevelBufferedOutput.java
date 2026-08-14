@@ -5,7 +5,18 @@ import java.io.IOException;
 public abstract class TopLevelBufferedOutput extends BufferedOutput {
     private final int initialBufferSize;
 
-    public  TopLevelBufferedOutput(byte[] buf, boolean bigEndian, int start, int pos, int lim, int initialBufferSize, boolean fixed, long totalLimit, TopLevelBufferedOutput cache, boolean preferSplit) {
+    protected TopLevelBufferedOutput(
+            byte[] buf,
+            boolean bigEndian,
+            int start,
+            int pos,
+            int lim,
+            int initialBufferSize,
+            boolean fixed,
+            long totalLimit,
+            TopLevelBufferedOutput cache,
+            boolean preferSplit
+    ) {
         super(buf, bigEndian, start, pos, lim, fixed, totalLimit, null, cache, preferSplit);
         this.initialBufferSize = initialBufferSize;
     }
@@ -13,10 +24,9 @@ public abstract class TopLevelBufferedOutput extends BufferedOutput {
     private NestedBufferedOutput cachedExclusive;
     private NestedBufferedOutput cachedShared = null;
 
-    /// Flush and unlink all closed blocks and optionally flush the root block.
     public abstract void flushBlocks(boolean forceFlush) throws IOException;
 
-   protected void bufferClosed(boolean closeUpstream) throws IOException {
+    protected void bufferClosed(boolean closeUpstream) throws IOException {
         cachedExclusive = null;
         cachedShared = null;
     }

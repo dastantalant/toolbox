@@ -3,6 +3,8 @@ package com.toolbox.io;
 import jdk.incubator.vector.ByteVector;
 import jdk.incubator.vector.VectorSpecies;
 
+import java.nio.MappedByteBuffer;
+
 public class VectorSupport {
     private VectorSupport() {
     }

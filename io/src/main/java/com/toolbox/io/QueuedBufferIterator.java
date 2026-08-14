@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
 public final class QueuedBufferIterator extends BufferIterator {
-    public static final BufferedOutput END_MARKER = BufferedOutput.growing(0);
+    public static final BufferedOutput END_MARKER = (BufferedOutput) BaseFactory.INSTANCE.writerGrowing(0);
 
     static { try { END_MARKER.close(); } catch (IOException ignored) {} }
 

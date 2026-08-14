@@ -18,16 +18,16 @@ public abstract class GzipBufferedOutput extends AsyncFilteringBufferedOutput<De
     /// Create a new synchronous GzipBufferedOutput with default parameters.
     ///
     /// This is the same as `sync(parent, Deflater.DEFAULT_COMPRESSION)`.
-    public static GzipBufferedOutput sync(BufferedOutput parent) throws IOException {
-        return sync(parent, Deflater.DEFAULT_COMPRESSION);
-    }
+//    public static GzipBufferedOutput sync(BufferedOutput parent) throws IOException {
+//        return sync(parent, Deflater.DEFAULT_COMPRESSION);
+//    }
 
     /// Create a new synchronous GzipBufferedOutput.
     ///
     /// @param compression The compression level, one of the constants in {@link Deflater}.
-    public static GzipBufferedOutput sync(BufferedOutput parent, int compression) throws IOException {
-        return new SequentialGzipBufferedOutput(parent, compression);
-    }
+//    public static GzipBufferedOutput sync(BufferedOutput parent, int compression) throws IOException {
+//        return new SequentialGzipBufferedOutput(parent, compression);
+//    }
 
     /// Create a new asynchronous GzipBufferedOutput.
     ///
@@ -53,16 +53,16 @@ public abstract class GzipBufferedOutput extends AsyncFilteringBufferedOutput<De
     /// for an explanation of most parameters.
     ///
     /// @param compression The compression level, one of the constants in {@link Deflater}.
-    public static GzipBufferedOutput parallel(BufferedOutput parent, int depth, int minPartitionSize,
-                                              int maxPartitionSize, boolean batchSubmit, Executor pool, int compression) throws IOException {
-        return new ParallelGzipBufferedOutput(parent, depth, minPartitionSize, maxPartitionSize, batchSubmit, pool, compression);
-    }
+//    public static GzipBufferedOutput parallel(BufferedOutput parent, int depth, int minPartitionSize,
+//                                              int maxPartitionSize, boolean batchSubmit, Executor pool, int compression) throws IOException {
+//        return new ParallelGzipBufferedOutput(parent, depth, minPartitionSize, maxPartitionSize, batchSubmit, pool, compression);
+//    }
 
     /// Create a new parallel GzipBufferedOutput with default parameters.
     /// This is the same as `parallel(parent, -1, 65536, 65536, true, null, Deflater.DEFAULT_COMPRESSION)`.
-    public static GzipBufferedOutput parallel(BufferedOutput parent) throws IOException {
-        return parallel(parent, -1, 65536, 65536, true, null, Deflater.DEFAULT_COMPRESSION);
-    }
+//    public static GzipBufferedOutput parallel(BufferedOutput parent) throws IOException {
+//        return parallel(parent, -1, 65536, 65536, true, null, Deflater.DEFAULT_COMPRESSION);
+//    }
 
 
     protected final CRC32 crc = new CRC32();
