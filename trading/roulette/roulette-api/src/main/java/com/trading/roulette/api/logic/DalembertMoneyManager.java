@@ -7,15 +7,14 @@ import com.trading.roulette.api.model.State;
 import com.trading.roulette.api.model.config.Config;
 import com.trading.roulette.api.utils.BetHelper;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 public class DalembertMoneyManager implements MoneyManager {
     private final long baseBet;
     private final long step;
     private final long maxBet;
-    private final Map<BetType, Long> currentBets = new HashMap<>();
+    private final EnumMap<BetType, Long> currentBets = new EnumMap<>(BetType.class);
 
     public DalembertMoneyManager(Config config, Long step) {
         baseBet = config.minBet();
