@@ -28,7 +28,7 @@ public class KellyMoneyManager implements MoneyManager {
         long bankroll = state.getVirtualBalance();
         if (bankroll <= 0) return 0;
         double b = type.payout();
-        double p = (double) type.winning().size() / totalSlots;
+        double p = type.winning().size() / totalSlots;
         double q = 1.0 - p;
         double f = (b * p - q) / b;
         if (f <= 0) return 0;
